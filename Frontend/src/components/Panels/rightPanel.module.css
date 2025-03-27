@@ -1,0 +1,11 @@
+.rightPanel{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	width: 20rem;
+	max-width: 20rem;
+	min-width: 20rem;
+	background-color: darkslategray;
+}

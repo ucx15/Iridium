@@ -1,0 +1,59 @@
+
+.leftPanel{
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* justify-content: space-between; */
+
+	width: 18rem;
+	max-width: 18rem;
+	min-width: 18rem;
+
+	background-color: darkslategray;
+
+	& header {
+		font-size: 2rem;
+		width: 100%;
+		padding: .1em;
+		text-align: center;
+	}
+
+	& nav {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+
+		width: 100%;
+
+		margin-top: 20em;
+		padding: 1rem 0;
+
+		border: 1px solid beige;
+		border-left: none;
+		border-right: none;
+
+		.navButton {
+			width: 90%;
+			padding: .5em;
+			font-size: 1.2rem;
+			border-radius: 5px;
+			border: .2em solid slategrey;
+		}
+
+		.logoutButton {
+			font-style: italic;
+			color: salmon;
+			background-color:beige;
+			transition: background-color .1s ease-in-out;
+
+			&:hover {
+				background-color: salmon;
+				color: beige;
+			}
+		}
+
+	};
+
+}

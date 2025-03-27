@@ -1,7 +1,7 @@
 const utils   = require("node:util");
 const express = require('express');
-// const cors    = require('cors');
-// const uuid    = require('uuid');
+const cors    = require('cors');
+const uuid    = require('uuid');
 
 
 // Constants
@@ -9,7 +9,7 @@ const PORT = 5000;
 const HOST = "localhost"
 
 const app = express();
-// app.use(cors({origin: '*', credentials: true}));
+app.use(cors({origin: '*', credentials: true}));
 app.use(express.json());
 
 
