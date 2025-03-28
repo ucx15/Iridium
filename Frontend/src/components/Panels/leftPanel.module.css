@@ -10,7 +10,8 @@
 	max-width: 18rem;
 	min-width: 18rem;
 
-	background-color: darkslategray;
+	/* background-color: #181818; */
+	border-right: .2em solid #444444;
 
 	& header {
 		font-size: 2rem;
