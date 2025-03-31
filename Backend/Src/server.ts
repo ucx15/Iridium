@@ -1,18 +1,20 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors    = require('cors');
-const dotenv = require('dotenv');
+// Server.ts
+
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 
 // Routes
-const apiRoutes = require('./Routes/apiRoutes');
-const defaultRoutes = require('./Routes/defaultRoutes');
+import apiRoutes from './Routes/apiRoutes.js';
+import defaultRoutes from './Routes/defaultRoutes.js';
 
 
 // Constants
 dotenv.config();
 const PORT      = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI as string;
 
 
 // Database Connection
@@ -33,6 +35,11 @@ app.use(cors({origin: '*', credentials: true}));
 // Routing
 app.use('/api', apiRoutes);
 app.use('/', defaultRoutes);
+
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
 
 
 // Server

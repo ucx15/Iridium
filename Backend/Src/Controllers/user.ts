@@ -1,40 +1,45 @@
 // User Controller
 
-const bcrypt = require('bcrypt');
-const { v4: uuid } = require('uuid');
+import { Request, Response, RequestHandler } from 'express';
+
+import bcrypt from 'bcrypt';
+import  { v4 as uuid } from 'uuid';
 
 
-const User = require('../Models/user');
-const authController = require('./auth.js');
+import  User from '../Models/user.js';
+import * as authController from './auth.js';
 
 
-const {validateRequestBody} = require('../utils.js');
+import validateRequestBody from '../utils.js';
 
+// import dotenv from 'dotenv';
 
-require('dotenv').config();
+// dotenv.config();
 
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
 
 
 // Functions
-const signup = async (req, res) => {
+const signup : RequestHandler = async (req: Request, res: Response) => {
 	console.log("\nPOST: User Signup");
 	const body = validateRequestBody(req.body, ['email', 'username', 'name', 'password']);
 
-	if ( !body ) {
+	if (!body) {
 		console.log(`ERROR:\t'userController.signup()' -> Missing required fields`);
-		return res.status(400).json({
+		res.status(400).json({
 			message: `Missing required fields`,
 			status: 'error'
 		});
+		return;
 	}
 
-	if ( await User.find(body.username) ) {
+	if (await User.find(body.username)) {
 		console.log(`WARN: '${body.username}' already exists`);
-		return res.status(400).json({
+		res.status(400).json({
 			message: `User '${body.username}' already exists`,
 			status: 'error'
 		});
+		return;
 	}
 
 	User.create(
@@ -45,7 +50,7 @@ const signup = async (req, res) => {
 		body.name,
 	);
 
-	const accessToken  = authController.genToken(body.username, 'access');
+	const accessToken = authController.genToken(body.username, 'access');
 	const refreshToken = authController.genToken(body.username, 'refresh');
 
 	console.log(`\t'${body.username}' signed up`);
@@ -55,40 +60,43 @@ const signup = async (req, res) => {
 		accessToken,
 		refreshToken
 	});
-
 };
 
-const login = async (req, res) => {
+
+const login : RequestHandler = async (req: Request, res: Response) => {
 	console.log("\nPOST: User Login");
 	const body = validateRequestBody(req.body, ['username', 'password']);
 
 	if (!body) {
 		console.log(`ERROR: Missing required fields`);
-		return res.status(400).json({
+		res.status(400).json({
 			message: `Missing required fields`,
 			status: 'error'
 		});
+		return;
 	}
 
 	const user = await User.get(body.username);
 
 	if (!user) {
 		console.log(`ERROR: User '${body.username}' does not exist`);
-		return res.status(400).json({
+		res.status(400).json({
 			message: `User '${body.username}' does not exist`,
 			status: 'error'
 		});
+		return;
 	}
 
 	if (! await bcrypt.compare(body.password, user.password)) {
 		console.log(`ERROR: Incorrect password for '${body.username}'`);
-		return res.status(400).json({
+		res.status(400).json({
 			message: `Incorrect password for ${body.username}`,
 			status: 'error'
 		});
+		return;
 	}
 
-	const accessToken  = authController.genToken(body.username, 'access');
+	const accessToken = authController.genToken(body.username, 'access');
 	const refreshToken = authController.genToken(body.username, 'refresh');
 
 	console.log(`\t'${body.username}' logged in`);
@@ -100,4 +108,4 @@ const login = async (req, res) => {
 	});
 };
 
-module.exports = { signup, login };
+export { signup, login };

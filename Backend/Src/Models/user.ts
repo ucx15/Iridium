@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 
 const userSchema = new mongoose.Schema({
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-const create = async (uuid, email, username, password, name) => {
+const create = async (uuid : String, email : String, username : String, password : String, name : String) => {
 	const user = new User({
 		uuid,
 		email,
@@ -38,13 +38,13 @@ const create = async (uuid, email, username, password, name) => {
 };
 
 // Returns true if user exists and false if user does not exist
-const find = async (username) => {
+const find = async (username : String) => {
 	return (await User.findOne({ username })) ? true : false;
 };
 
-const get = async (username) => {
+const get = async (username : String) => {
 	return (await User.findOne({ username }));
 };
 
 
-module.exports = { User,  create, find, get };
+export default { User,  create, find, get };
