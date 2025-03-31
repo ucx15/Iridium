@@ -1,30 +1,41 @@
-const utils   = require("node:util");
 const express = require('express');
+const mongoose = require('mongoose');
 const cors    = require('cors');
-const uuid    = require('uuid');
+const dotenv = require('dotenv');
+
+
+// Routes
+const apiRoutes = require('./Routes/apiRoutes');
+const defaultRoutes = require('./Routes/defaultRoutes');
 
 
 // Constants
-const PORT = 5000;
-const HOST = "localhost"
+dotenv.config();
+const PORT      = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
+
+// Database Connection
+mongoose.connect(MONGO_URI)
+	.then(() => console.log('DB: Connected to MongoDB'))
+	.catch(err => console.error('DB Connection Error:', err));
+
+
+// Express Setup
 const app = express();
-app.use(cors({origin: '*', credentials: true}));
+
+
+// Middlewares
 app.use(express.json());
+app.use(cors({origin: '*', credentials: true}));
 
 
-app.post('/*', (req, res) => {
-	console.log(req.url);
-	res.status(200).json({message: 'Hola', status:'success'});
-})
-
-app.get('/*', (req, res) => {
-	console.log(req.url);
-	res.status(200).json({message: 'Hola', status:'success'});
-})
+// Routing
+app.use('/api', apiRoutes);
+app.use('/', defaultRoutes);
 
 
 // Server
 app.listen(PORT, () => {
-	console.log(`Backend Running @ http://${HOST}:${PORT}`);
+	console.log(`Iridium Backend @ http://localhost:${PORT}`);
 });
