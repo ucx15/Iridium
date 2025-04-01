@@ -56,6 +56,7 @@ const AuthForm = () => {
         console.log(data);
 
         if (data.status !== 'success') {
+          alert(data.message);
           return;
         }
 
