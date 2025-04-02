@@ -9,6 +9,7 @@ import  { randomUUID as uuid } from 'node:crypto';
 import  User from '../Models/user.model.js';
 import { genToken } from './auth.controller.js';
 
+// utils
 import validateRequestBody from '../utils.js';
 
 // Types
@@ -16,11 +17,10 @@ import { Request, Response, RequestHandler } from 'express';
 
 
 dotenv.config();
-
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
 
 
-// Functions
+// Request Handlers
 const signup : RequestHandler = async (req: Request, res: Response) => {
 	console.log("\nPOST: User Signup");
 	const {body} = validateRequestBody(req.body, ['email', 'username', 'name', 'password']);
@@ -54,15 +54,14 @@ const signup : RequestHandler = async (req: Request, res: Response) => {
 	const accessToken = genToken(body.username, 'access');
 	const refreshToken = genToken(body.username, 'refresh');
 
-	console.log(`\t'${body.username}' signed up`);
 	res.json({
 		message: 'Signup successful',
 		status: 'success',
 		accessToken,
 		refreshToken
 	});
+	console.log(`\t'${body.username}' signed up`);
 };
-
 
 const login : RequestHandler = async (req: Request, res: Response) => {
 	console.log("\nPOST: User Login");
@@ -109,4 +108,25 @@ const login : RequestHandler = async (req: Request, res: Response) => {
 	});
 };
 
-export { signup, login };
+
+// Functions
+const addPost = async (username : string, postID : string) : Promise<boolean> => {
+	const user = await User.get(username);
+
+	if ( !user ) {
+		console.log(`ERROR: User '${username}' does not exist`);
+		return false;
+	}
+
+	if ( await User.findPost(username, postID) ) {
+		console.log(`WARN: user.controller.addPost() -> Post '${postID}' already exists for '${username}'`);
+		return false;
+	}
+
+	User.addPost(username, postID);
+	console.log(`INFO: Added post '${postID}' to '${username}'`);
+
+	return true;
+}
+
+export { signup, login , addPost};

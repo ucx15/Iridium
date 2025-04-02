@@ -46,6 +46,27 @@ const get = async (username : String) => {
 	return (await User.findOne({ username }));
 };
 
+const addPost = async (username : string, postId : string) => {
+	const user = await User.findOne({ username });
+
+	if ( !user ) {
+		return;
+	}
+
+	user.posts.push(postId);
+	user.save();
+}
+
+const findPost = async (username : string, postId : string) : Promise<boolean> => {
+	const user = await User.findOne({ username });
+
+	if ( !user ) {
+		return false;
+	}
+
+	return user.posts.includes(postId) ? true : false;
+}
+
 
 // For debugging
 const getAll = async () => {
@@ -53,4 +74,4 @@ const getAll = async () => {
 }
 
 
-export default { User,  create, find, get, getAll};
+export default { User,  create, find, get, getAll, addPost, findPost};
