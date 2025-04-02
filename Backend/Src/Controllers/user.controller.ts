@@ -1,20 +1,21 @@
-// User Controller
+// Controllers/user.controller.ts
 
-import { Request, Response, RequestHandler } from 'express';
 
+import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import  { v4 as uuid } from 'uuid';
+import  { randomUUID as uuid } from 'node:crypto';
 
-
-import  User from '../Models/user.js';
-import * as authController from './auth.js';
-
+// Controllers and Models
+import  User from '../Models/user.model.js';
+import { genToken } from './auth.controller.js';
 
 import validateRequestBody from '../utils.js';
 
-// import dotenv from 'dotenv';
+// Types
+import { Request, Response, RequestHandler } from 'express';
 
-// dotenv.config();
+
+dotenv.config();
 
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
 
@@ -22,7 +23,7 @@ const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10;
 // Functions
 const signup : RequestHandler = async (req: Request, res: Response) => {
 	console.log("\nPOST: User Signup");
-	const body = validateRequestBody(req.body, ['email', 'username', 'name', 'password']);
+	const {body} = validateRequestBody(req.body, ['email', 'username', 'name', 'password']);
 
 	if (!body) {
 		console.log(`ERROR:\t'userController.signup()' -> Missing required fields`);
@@ -50,8 +51,8 @@ const signup : RequestHandler = async (req: Request, res: Response) => {
 		body.name,
 	);
 
-	const accessToken = authController.genToken(body.username, 'access');
-	const refreshToken = authController.genToken(body.username, 'refresh');
+	const accessToken = genToken(body.username, 'access');
+	const refreshToken = genToken(body.username, 'refresh');
 
 	console.log(`\t'${body.username}' signed up`);
 	res.json({
@@ -65,9 +66,9 @@ const signup : RequestHandler = async (req: Request, res: Response) => {
 
 const login : RequestHandler = async (req: Request, res: Response) => {
 	console.log("\nPOST: User Login");
-	const body = validateRequestBody(req.body, ['username', 'password']);
+	const {body} = validateRequestBody(req.body, ['username', 'password']);
 
-	if (!body) {
+	if ( !body ) {
 		console.log(`ERROR: Missing required fields`);
 		res.status(400).json({
 			message: `Missing required fields`,
@@ -96,8 +97,8 @@ const login : RequestHandler = async (req: Request, res: Response) => {
 		return;
 	}
 
-	const accessToken = authController.genToken(body.username, 'access');
-	const refreshToken = authController.genToken(body.username, 'refresh');
+	const accessToken = genToken(body.username, 'access');
+	const refreshToken = genToken(body.username, 'refresh');
 
 	console.log(`\t'${body.username}' logged in`);
 	res.json({

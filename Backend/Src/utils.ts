@@ -1,13 +1,36 @@
-function validateRequestBody(body: Record<string, any>, fields: string[]): Record<string, string> | null {
-    let newBody: Record<string, string> = {};
+function validateRequestBody(
+    body: Record<string, any>,
+    fields: string[],
+    optional?: string[])
+    : {
+        body: Record<string, string> | null,
+        optional?: Record<'media', string[]>
+    } {
+    let newBody: Record<string, string> | null = {};
+    let optionalBody: Record<'media', string[] > | undefined;
+
     for (let field of fields) {
         const value = body[field];
         if (!value || !value.trim()) {
-            return null;
+            newBody = null;
+            break;
         }
         newBody[field] = value.trim();
     }
-    return newBody;
+
+    if ( optional ) {
+        const media = body['media'];
+        if (media && media.length > 0) {
+            optionalBody = {media};
+        }
+    }
+
+    return {
+        body: newBody,
+        optional: optionalBody? optionalBody : undefined
+    };
 }
 
 export default validateRequestBody;
+
+// TODO() : Only support 'media : string[]' in optional right now

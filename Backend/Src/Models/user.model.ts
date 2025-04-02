@@ -47,4 +47,10 @@ const get = async (username : String) => {
 };
 
 
-export default { User,  create, find, get };
+// For debugging
+const getAll = async () => {
+	return (await User.find({}));
+}
+
+
+export default { User,  create, find, get, getAll};

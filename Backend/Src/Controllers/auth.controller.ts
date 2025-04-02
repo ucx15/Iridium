@@ -69,7 +69,7 @@ const genToken = (username: string, type: 'access' | 'refresh' = 'access'): stri
 const refreshAccessToken : RequestHandler = (req: Request, res: Response) => {
 	console.log("\nAUTH:\tRefreshing Access Token");
 
-	const body = validateRequestBody(req.body, ['refreshToken', 'username']);
+	const {body} = validateRequestBody(req.body, ['refreshToken', 'username']);
 	if (!body) {
 		console.error("ERROR: 'authController.refreshAccessToken()' -> Missing Refresh Token or Username");
 		res.status(401).json({ message: "Refresh Token not provided", status: "error" });
