@@ -9,6 +9,10 @@ import Post from '../../components/Post/post';
 import defaultStyles from './panel.module.css';
 import styles from './middlePanel.module.css';
 
+// // utils
+// import * as LS from '../../utils/localStorage';
+
+
 const MiddlePanel = () => {
 
 	const navigate = useNavigate();

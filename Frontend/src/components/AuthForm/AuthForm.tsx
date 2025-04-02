@@ -5,6 +5,17 @@ import './authForm.css'; // Regular CSS (or use modules)
 
 import BACKEND_URI from '../../config';
 
+// utils
+import * as LS from '../../LocalStorage.js';
+
+interface AuthResponse {
+  message: string;
+  status: 'success' | 'error';
+
+  accessToken?: string | undefined;
+  refreshToken?: string | undefined;
+}
+
 
 const AuthForm = () => {
   const navigate = useNavigate();
@@ -39,10 +50,6 @@ const AuthForm = () => {
       submitData['cnfPassword'] = cnfPassword;
     }
 
-    interface response {
-      message: string;
-      status: 'success' | 'error';
-    }
 
     fetch(`${BACKEND_URI}/${authType}`, {
       method: 'POST',
@@ -51,17 +58,25 @@ const AuthForm = () => {
       },
       body: JSON.stringify(submitData)
     })
-      .then(res => res.json() as Promise<response>)
+      .then(res => res.json() as Promise<AuthResponse>)
       .then(data => {
         console.log(data);
 
-        if (data.status !== 'success') {
+        if (
+          data.status !== 'success' ||
+          !(data.accessToken) ||
+          !(data.refreshToken)
+        ) {
           alert(data.message);
           return;
         }
 
-        localStorage.setItem('username', username);
+        LS.setUsername(username);
+        LS.setAccessToken(data.accessToken);
+        LS.setRefreshToken(data.refreshToken);
+
         navigate('/home');
+
       })
       .catch(err => {
         console.error(err);
