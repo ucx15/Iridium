@@ -3,20 +3,21 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // components
-import Post from '../../components/Post/post';
+import Post from '../../../components/Post/post'; // Custom Component
+import PostCreator from '../../../components/PostCreator/postCreator'; // Custom Component
 
 // styles
 import defaultStyles from './panel.module.css';
 import styles from './middlePanel.module.css';
 
-// // utils
-// import * as LS from '../../utils/localStorage';
+// utils
+import * as LS from '../../../LocalStorage';
 
 
 const MiddlePanel = () => {
 
 	const navigate = useNavigate();
-	const username = localStorage.getItem('username');
+	const username = LS.getUsername(); // get username from local storage
 
 	// redirect to auth page if not logged in
 	React.useEffect(() => {
@@ -31,6 +32,8 @@ const MiddlePanel = () => {
 
 		<div className={[defaultStyles.panel, styles.middlePanel].join(' ')}>
 			<div className={styles.posts}>
+
+			<PostCreator />
 				< Post user='uc' caption='hola esta es mi uno poste!' images={['https://images.unsplash.com/photo-1742800233278-5cb49547377b']}/>
 				< Post user='cu' caption='hola jo soy una hombre.'  images={['https://images.unsplash.com/photo-1741850826386-9cb8e5543c73']}/>
 

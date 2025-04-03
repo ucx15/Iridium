@@ -8,14 +8,14 @@ import defaultStyles from './panel.module.css'
 import styles from './leftPanel.module.css'
 
 // utils
-import * as LS from '../../LocalStorage.js';
+import * as LS from '../../../LocalStorage.js';
 // import { refreshAccessToken } from '../../JWT';
 
 
 const LeftPanel = () => {
 
 	const navigate = useNavigate();
-	const username = localStorage.getItem('username');
+	const username = LS.getUsername();
 
 	// redirect to auth page if not logged in
 	React.useEffect(() => {
