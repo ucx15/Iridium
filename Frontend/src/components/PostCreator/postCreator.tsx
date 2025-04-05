@@ -50,9 +50,6 @@ const PostCreator = () => {
         else if (res.ok && data.status === 'success') {
           console.log('Post created successfully:', data.message);
           setInputText('');
-
-          const textArea = document.getElementById('post-input') as HTMLTextAreaElement;
-          if (textArea) {textArea.value = '';}
         }
       }
 
@@ -62,7 +59,6 @@ const PostCreator = () => {
 
     }
 
-
   return (
     <div className={styles.postCreator}>
 
@@ -70,6 +66,7 @@ const PostCreator = () => {
         name="post-input"
         id="post-input"
         placeholder='What is on your mind?'
+        value={inputText}
         onChange={(e) => setInputText(e.target.value)}>
       </textarea>
 
