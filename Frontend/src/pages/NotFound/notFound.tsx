@@ -4,7 +4,7 @@
 import styles from './notFound.module.css';
 
 
-const notFound = () => {
+const NotFoundPage = () => {
   return (
 	<div className={styles.notFoundPage}>
 		<h1>404</h1>
@@ -13,4 +13,4 @@ const notFound = () => {
   )
 }
 
-export default notFound
+export default NotFoundPage

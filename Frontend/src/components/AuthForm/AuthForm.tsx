@@ -6,7 +6,7 @@ import './authForm.css'; // Regular CSS (or use modules)
 import BACKEND_URI from '../../config';
 
 // utils
-import * as LS from '../../LocalStorage.js';
+import * as LS from '../../utils/LocalStorage.js';
 
 interface AuthResponse {
   message: string;

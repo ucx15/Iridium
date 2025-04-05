@@ -6,8 +6,8 @@ import styles from './postCreator.module.css';
 import BACKEND_URI from '../../config';
 
 // utils
-import * as LS from '../../LocalStorage';
-import { refreshAccessToken } from '../../JWT';
+import * as LS from '../../utils/LocalStorage';
+import { refreshAccessToken } from '../../utils/JWT';
 
 const PostCreator = () => {
   const [inputText, setInputText] = useState<string>('');

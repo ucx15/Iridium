@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 // components
 import Post from '../../../components/Post/post'; // Custom Component
@@ -11,8 +10,8 @@ import defaultStyles from './panel.module.css';
 import styles from './middlePanel.module.css';
 
 // utils
-import * as LS from '../../../LocalStorage';
-import { refreshAccessToken } from '../../../JWT';
+import * as LS from '../../../utils/LocalStorage';
+import { refreshAccessToken } from '../../../utils/JWT';
 import BACKEND_URI from '../../../config';
 
 type PostData = {
@@ -22,20 +21,12 @@ type PostData = {
 }
 
 const MiddlePanel = () => {
-	const navigate = useNavigate();
 	const username = LS.getUsername(); // get username from local storage
 
 	const [posts, setPosts] = React.useState<PostData[]>([]); // state to hold posts
 	const [postIDs, setPostIDs] = React.useState<string[]>([]); // state to hold posts
 
 	// redirect to auth page if not logged in
-	React.useEffect(() => {
-		if (!username) {
-			navigate('/auth');
-		}
-	}
-		, [navigate, username]);
-
 
 	// inital feed loading
 	const handleFetchPosts = React.useCallback(async () => {

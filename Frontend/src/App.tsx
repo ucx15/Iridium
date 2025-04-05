@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import { useState } from 'react'
 
-import Auth from './pages/Auth/auth';
-import Home from './pages/Home/home';
-import NotFound from './pages/NotFound/notFound';
+import AuthPage from './pages/Auth/auth';
+import HomePage from './pages/Home/home';
+// import UserPage from './pages/User/user';
+import NotFoundPage from './pages/NotFound/notFound';
 
 // Styles
 import './App.css'
@@ -15,10 +15,10 @@ function App() {
     <div className='App'>
       <Router>
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='auth' element={<Auth />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='*' element={<NotFound />} />
+          <Route path='/' element={<HomePage />} />
+          <Route path='auth' element={<AuthPage />} />
+          {/* <Route path='/u/:id' element={<UserPage />} /> */}
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </Router>
     </div>

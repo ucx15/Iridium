@@ -1,5 +1,5 @@
 import * as LS from "./LocalStorage.js";
-import BACKEND_URI from './config.js';
+import BACKEND_URI from '../config.js';
 
 
 interface RefreshTokenResponse {

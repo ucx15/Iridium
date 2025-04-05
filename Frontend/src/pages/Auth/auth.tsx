@@ -3,13 +3,16 @@ import AuthForm from '../../components/AuthForm/AuthForm';
 import { useNavigate } from 'react-router-dom';
 
 // Styles
-import styles from './auth.module.css';  // CSS Modules (scoped styles)
+import styles from './auth.module.css';
+
+import * as LS from '../../utils/LocalStorage'; // Local Storage utils
 
 
-const Auth = () => {
+const AuthPage = () => {
   const navigate = useNavigate();
 
-  const username = localStorage.getItem('username');
+  const username = LS.getUsername();
+
   if (username) {
     navigate('/');
   }
@@ -21,4 +24,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default AuthPage;

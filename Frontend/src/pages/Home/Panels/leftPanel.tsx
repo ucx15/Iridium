@@ -8,7 +8,7 @@ import defaultStyles from './panel.module.css'
 import styles from './leftPanel.module.css'
 
 // utils
-import * as LS from '../../../LocalStorage.js';
+import * as LS from '../../../utils/LocalStorage.js';
 // import { refreshAccessToken } from '../../JWT';
 
 
