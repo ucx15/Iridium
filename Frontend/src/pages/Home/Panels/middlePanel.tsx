@@ -16,7 +16,7 @@ import { refreshAccessToken } from '../../../JWT';
 import BACKEND_URI from '../../../config';
 
 type PostData = {
-	username: string;
+	by: string;
 	description: string;
 	media?: string[];
 }
@@ -101,7 +101,7 @@ const MiddlePanel = () => {
 			else if (res.ok && data.status === 'success') {
 				const post : PostData = data.post as PostData;
 				posts.push({
-					username: post.username,
+					by: post.by,
 					description: post.description,
 					media: post.media
 				});
@@ -135,7 +135,7 @@ const MiddlePanel = () => {
 				<PostCreator />
 
 				{posts.map((post, index) => (
-					<Post key={index} user={post.username} caption={post.description} images={post.media} />
+					<Post key={index} user={post.by} caption={post.description} images={post.media} />
 				))}
 
 			</div>
