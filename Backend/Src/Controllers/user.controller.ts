@@ -7,7 +7,10 @@ import  { randomUUID as uuid } from 'node:crypto';
 
 // Controllers and Models
 import  User from '../Models/user.model.js';
+import Post from '../Models/post.model.js';
+
 import { genToken } from './auth.controller.js';
+
 
 // utils
 import validateRequestBody from '../utils.js';
@@ -108,6 +111,52 @@ const login : RequestHandler = async (req: Request, res: Response) => {
 	});
 };
 
+// const myPosts : RequestHandler = async (req: Request, res: Response) => {
+// 	res.json({'My Posts' : 'My Posts'});
+// }
+
+const myFeed : RequestHandler = async (req: Request, res: Response) => {
+	const {body} = validateRequestBody(req.body, ['username']);
+	if (!body) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	const {username} = body;
+	const user = await User.get(username);
+
+	if ( !user ) {
+		console.log(`ERROR: User '${username}' does not exist`);
+		res.status(400).json({
+			message: `User '${username}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	const posts : string[] = [];
+
+	for ( const following of user.following ) {
+		const postList = await User.getAllPosts(following);
+		for (const postID of postList) {
+			posts.push(postID);
+		}
+	}
+
+	console.log(posts);
+
+	res.status(200).json({
+		message: 'Feed fetched successfully',
+		status: 'success',
+		feed: posts
+	});
+	console.log(`INFO: Fetched feed for '${username}'`);
+}
+
 
 // Functions
 const addPost = async (username : string, postID : string) : Promise<boolean> => {
@@ -129,4 +178,5 @@ const addPost = async (username : string, postID : string) : Promise<boolean> =>
 	return true;
 }
 
-export { signup, login , addPost};
+// export { signup, login , myPosts, myFeed, addPost};
+export { signup, login , myFeed, addPost};

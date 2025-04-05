@@ -18,10 +18,12 @@ const router = Router();
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.post('/refresh-token', authController.refreshAccessToken);
+// router.post('/my-posts', authController.authorize, userController.myPosts);
+router.post('/my-feed', authController.authorize, userController.myFeed);
 
 // post routes
 router.post('/post/create', authController.authorize, postController.create);
-
+router.get('/post/:id', authController.authorize, postController.get);
 
 // wildcard route
 router.get('/', (req, res) => {

@@ -7,7 +7,7 @@ import styles from './post.module.css';
 interface Props {
 	user: string;
 	caption: string;
-	images: string[];
+	images?: string[];
 }
 
 const Post = (props: Props) => {
@@ -17,7 +17,7 @@ const Post = (props: Props) => {
 
 			{/* What to do to render images if props.images has length > 0  */}
 
-			{props.images.length > 0 && (
+			{props.images && props.images.length > 0 && (
 				<div className={styles.images}>
 					{props.images.map((image, index) => (
 						<img

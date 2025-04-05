@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-const create = async (uuid : String, email : String, username : String, password : String, name : String) => {
+const create = async (uuid: String, email: String, username: String, password: String, name: String) => {
 	const user = new User({
 		uuid,
 		email,
@@ -38,18 +38,18 @@ const create = async (uuid : String, email : String, username : String, password
 };
 
 // Returns true if user exists and false if user does not exist
-const find = async (username : String) => {
+const find = async (username: String) => {
 	return (await User.findOne({ username })) ? true : false;
 };
 
-const get = async (username : String) => {
+const get = async (username: String) => {
 	return (await User.findOne({ username }));
 };
 
-const addPost = async (username : string, postId : string) => {
+const addPost = async (username: string, postId: string) => {
 	const user = await User.findOne({ username });
 
-	if ( !user ) {
+	if (!user) {
 		return;
 	}
 
@@ -57,16 +57,25 @@ const addPost = async (username : string, postId : string) => {
 	user.save();
 }
 
-const findPost = async (username : string, postId : string) : Promise<boolean> => {
+const findPost = async (username: string, postId: string): Promise<boolean> => {
 	const user = await User.findOne({ username });
 
-	if ( !user ) {
+	if (!user) {
 		return false;
 	}
 
 	return user.posts.includes(postId) ? true : false;
 }
 
+const getAllPosts = async (username: string): Promise<any> => {
+	const user = await User.findOne({ username });
+
+	if (!user) {
+		return [];
+	}
+
+	return user.posts;
+}
 
 // For debugging
 const getAll = async () => {
@@ -74,4 +83,4 @@ const getAll = async () => {
 }
 
 
-export default { User,  create, find, get, getAll, addPost, findPost};
+export default { User, create, find, get, getAll, addPost, findPost, getAllPosts };

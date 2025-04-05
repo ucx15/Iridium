@@ -81,5 +81,36 @@ const create : RequestHandler = async (req: Request, res: Response) => {
 	console.log(`INFO: Post by '${body.username}' created successfully\n`);
 }
 
+const get : RequestHandler = async (req: Request, res: Response) => {
+	const { id } = req.params;
 
-export { create };
+	// const { body } = validateRequestBody(req.body, ['postID']);
+
+	// if (!body) {
+	// 	console.log(`ERROR: Missing required fields`);
+	// 	res.status(400).json({
+	// 		message: `Missing required fields`,
+	// 		status: 'error'
+	// 	});
+	// 	return;
+	// }
+
+	const post = await Post.get(id);
+
+	if (!post) {
+		console.log(`ERROR: Post '${id}' does not exist`);
+		res.status(400).json({
+			message: `Post '${id}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	res.status(200).json({
+		message: 'Post fetched successfully',
+		status: 'success',
+		post
+	});
+}
+
+export { create, get};

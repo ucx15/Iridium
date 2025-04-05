@@ -12,12 +12,21 @@ import styles from './middlePanel.module.css';
 
 // utils
 import * as LS from '../../../LocalStorage';
+import { refreshAccessToken } from '../../../JWT';
+import BACKEND_URI from '../../../config';
 
+type PostData = {
+	username: string;
+	description: string;
+	media?: string[];
+}
 
 const MiddlePanel = () => {
-
 	const navigate = useNavigate();
 	const username = LS.getUsername(); // get username from local storage
+
+	const [posts, setPosts] = React.useState<PostData[]>([]); // state to hold posts
+	const [postIDs, setPostIDs] = React.useState<string[]>([]); // state to hold posts
 
 	// redirect to auth page if not logged in
 	React.useEffect(() => {
@@ -28,27 +37,107 @@ const MiddlePanel = () => {
 		, [navigate, username]);
 
 
+	// inital feed loading
+	const handleFetchPosts = React.useCallback(async () => {
+		const reqBody = {
+			username,
+		};
+
+		try {
+			const res = await fetch(`${BACKEND_URI}/my-feed`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${LS.getAccessToken()}`
+				},
+				body: JSON.stringify(reqBody)
+			})
+
+			const data = await res.json();
+			console.log('Response:', data);
+			console.log(`handlePost() -> '${data.status}' : ${data.message}`);
+
+			// Handle token expiration
+			if (res.status === 403) {
+				if (await refreshAccessToken()) {
+					handleFetchPosts();
+				}
+				return;
+			}
+
+			else if (res.ok && data.status === 'success') {
+				setPostIDs(data.feed);
+			}
+		}
+
+		catch (error) {
+			console.error(`ERROR: 'handleFetchPosts()' -> ${error}`);
+		};
+	}, [username]);
+
+	const handlePopulateFeed = React.useCallback(async () => {
+		const posts: PostData[] = [];
+
+		for (const postID of postIDs) {
+			const res = await fetch(`${BACKEND_URI}/post/${postID}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${LS.getAccessToken()}`
+				}
+			});
+
+			const data = await res.json();
+			console.log('Response:', data);
+			console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
+
+			if (res.status === 403) {
+				if (await refreshAccessToken()) {
+					handlePopulateFeed();
+				}
+				return;
+			}
+
+			else if (res.ok && data.status === 'success') {
+				const post : PostData = data.post as PostData;
+				posts.push({
+					username: post.username,
+					description: post.description,
+					media: post.media
+				});
+			}
+		}
+
+		setPosts(posts);
+	}, [postIDs]);
+
+
+	React.useEffect(() => {
+		if (username) {
+			handleFetchPosts();
+		}
+	}, [handleFetchPosts, username]);
+
+
+	React.useEffect(() => {
+		if (postIDs.length > 0) {
+			handlePopulateFeed();
+		}
+	}
+		, [handlePopulateFeed, postIDs]);
+
+
 	return (
 
 		<div className={[defaultStyles.panel, styles.middlePanel].join(' ')}>
 			<div className={styles.posts}>
 
-			<PostCreator />
-				< Post user='uc' caption='hola esta es mi uno poste!' images={['https://images.unsplash.com/photo-1742800233278-5cb49547377b']}/>
-				< Post user='cu' caption='hola jo soy una hombre.'  images={['https://images.unsplash.com/photo-1741850826386-9cb8e5543c73']}/>
+				<PostCreator />
 
-				< Post user='uc' caption='Esta Bien.' images={[]} />
-				< Post user='cu' caption='Uno pan con carne, por favor?' images={['https://images.unsplash.com/photo-1742943679521-f4736500a471']} />
-				< Post user='uc' caption='slkngwpgib pijfbpij pirnj pij.' images={[]} />
-				< Post user='Poniv' caption='This is my 1st post.' images={[]} />
-				< Post user='Poniv' caption='This is my 2nd post.' images={[]} />
-				< Post user='Poniv' caption='This is my 3rd post.' images={[]} />
-				< Post user='Poniv' caption='This is my 4th post.' images={[]} />
-				< Post user='Poniv' caption='This is my 5th post.' images={[]} />
-				< Post user='Poniv' caption='This is my 6th post.' images={[]} />
-				< Post user='Poniv' caption='This is my 7th post.' images={[]} />
-				< Post user='Poniv' caption='This is my 8th post.' images={[]} />
-				< Post user='Poniv' caption='This is my 9th post.' images={[]} />
+				{posts.map((post, index) => (
+					<Post key={index} user={post.username} caption={post.description} images={post.media} />
+				))}
+
 			</div>
 		</div>
 
