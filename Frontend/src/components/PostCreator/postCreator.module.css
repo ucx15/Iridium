@@ -3,8 +3,9 @@
 	flex-direction: column;
 
 	width: 80%;
-	min-height: 20vh;
-	height: 20vh;
+	height: 10em;
+	min-height: 10em;
+	max-height: 10em;
 
 	border-radius: 8px;
 	overflow: hidden;

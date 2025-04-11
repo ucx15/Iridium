@@ -1,3 +1,4 @@
+import React from 'react';
 
 import AuthForm from '../../components/AuthForm/AuthForm';
 import { useNavigate } from 'react-router-dom';
@@ -10,12 +11,15 @@ import * as LS from '../../utils/LocalStorage'; // Local Storage utils
 
 const AuthPage = () => {
   const navigate = useNavigate();
-
   const username = LS.getUsername();
 
-  if (username) {
-    navigate('/');
+  React.useEffect(() => {
+    if (username && LS.getAccessToken()) {
+      navigate('/');
+    }
   }
+  , [navigate, username]);
+
 
   return (
     <div className={styles.authPage}>

@@ -157,6 +157,51 @@ const myFeed : RequestHandler = async (req: Request, res: Response) => {
 	console.log(`INFO: Fetched feed for '${username}'`);
 }
 
+const getUser: RequestHandler = async (req: Request, res: Response) => {
+	console.log(req.originalUrl);
+	const { id } = req.params;
+	const userID = id as string;
+
+	if (!userID) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	const user = await User.get(userID);
+
+	if ( !user ) {
+		console.log(`WARN: User '${userID}' does not exist`);
+		res.status(400).json({
+			message: `User '${userID}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	const userData = {
+		name: user.name,
+		username: user.username,
+
+		createdAt: user.createdAt,
+		bio: user.bio,
+		profilePicture: user.profilePicture,
+
+		followers: user.followers,
+		following: user.following,
+	}
+
+	res.json({
+		message: 'User fetched successfully',
+		status: 'success',
+		userData
+	});
+
+	console.log(`INFO: Fetched user '${userID}'`);
+}
 
 // Functions
 const addPost = async (username : string, postID : string) : Promise<boolean> => {
@@ -179,4 +224,4 @@ const addPost = async (username : string, postID : string) : Promise<boolean> =>
 }
 
 // export { signup, login , myPosts, myFeed, addPost};
-export { signup, login , myFeed, addPost};
+export { signup, login , myFeed, addPost, getUser};

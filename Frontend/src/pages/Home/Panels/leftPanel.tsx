@@ -9,22 +9,12 @@ import styles from './leftPanel.module.css'
 
 // utils
 import * as LS from '../../../utils/LocalStorage.js';
-// import { refreshAccessToken } from '../../JWT';
 
 
 const LeftPanel = () => {
 
 	const navigate = useNavigate();
 	const username = LS.getUsername();
-
-	// redirect to auth page if not logged in
-	React.useEffect(() => {
-		if (!username) {
-			navigate('/auth');
-		}
-	}
-		, [navigate, username]);
-
 
 	const handleLogout = () => {
 		LS.clear();
@@ -36,7 +26,7 @@ const LeftPanel = () => {
 		<div className={[defaultStyles.panel, styles.leftPanel].join(' ')}>
 
 			<header>
-				{username}
+				<p onClick={() => navigate(`/u/${username}`)} style={{ cursor: 'pointer' }}>{username}</p>
 			</header>
 
 			<nav>

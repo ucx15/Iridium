@@ -1,0 +1,54 @@
+.userPage {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	margin: 0 10%;
+	width: 100%;
+	min-height: 100%;
+	border: .1em solid black;
+	border-top: none;
+	border-bottom: none;
+	background-color: dimgrey;
+}
+
+.hero {
+	background: linear-gradient(to bottom right, #aaa, #181850);
+
+	width: 100%;
+	/* min-height: 30%; */
+	/* height: 30%; */
+	padding: 1em;
+
+	.userImage {
+		max-width: 180px;
+		max-height: 180px;
+		border-radius: 20%;
+		background-color: #aaa;
+		padding: .2em;
+	}
+}
+
+.about {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	padding: 1em;
+	width: 100%;
+	height: 25%;
+
+	background-color: aliceblue;
+
+	.userBio {
+		max-width: 80%;
+		background-color: #ddd;
+	}
+
+	.userStats {
+		display: flex;
+		gap: 2em;
+	}
+
+
+}

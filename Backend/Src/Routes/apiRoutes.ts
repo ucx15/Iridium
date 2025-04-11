@@ -14,11 +14,14 @@ import * as postController from '../Controllers/post.controller.js';
 
 const router = Router();
 
-// user routes
+// auth routes
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.post('/refresh-token', authController.refreshAccessToken);
+
+// user routes
 // router.post('/my-posts', authController.authorize, userController.myPosts);
+router.get('/user/:id', userController.getUser);
 router.post('/my-feed', authController.authorize, userController.myFeed);
 
 // post routes

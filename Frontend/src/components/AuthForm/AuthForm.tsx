@@ -75,7 +75,7 @@ const AuthForm = () => {
         LS.setAccessToken(data.accessToken);
         LS.setRefreshToken(data.refreshToken);
 
-        navigate('/home');
+        navigate('/');
 
       })
       .catch(err => {

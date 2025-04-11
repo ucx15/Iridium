@@ -18,7 +18,7 @@ const HomePage = () => {
 
   const username = LS.getUsername();
   React.useEffect(() => {
-    if (!username) {
+    if (!username || !LS.getAccessToken() ) {
       navigate('/auth');
     }
   }
