@@ -1,7 +1,14 @@
+# VSCode Stuff
+.vscode/
+*.code-workspace
+
+
+# Node.js Stuff
 node_modules/
 Build/
 Dist/
 
-.vscode
-.env*
 package-lock.json
+
+# Env files
+.env*

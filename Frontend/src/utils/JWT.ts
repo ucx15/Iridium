@@ -8,6 +8,7 @@ interface RefreshTokenResponse {
 	accessToken?: string;
 }
 
+// TODO: Add redirection to '/auth' if refresh token expires
 async function refreshAccessToken(): Promise<boolean> {
 	const refreshToken = LS.getRefreshToken();
 	const username = LS.getUsername();

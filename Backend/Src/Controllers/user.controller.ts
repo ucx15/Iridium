@@ -147,7 +147,6 @@ const myFeed : RequestHandler = async (req: Request, res: Response) => {
 		}
 	}
 
-	console.log(posts);
 
 	res.status(200).json({
 		message: 'Feed fetched successfully',
@@ -223,5 +222,4 @@ const addPost = async (username : string, postID : string) : Promise<boolean> =>
 	return true;
 }
 
-// export { signup, login , myPosts, myFeed, addPost};
 export { signup, login , myFeed, addPost, getUser};

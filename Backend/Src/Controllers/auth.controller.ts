@@ -72,7 +72,7 @@ const refreshAccessToken : RequestHandler = (req: Request, res: Response) => {
 	const {body} = validateRequestBody(req.body, ['refreshToken', 'username']);
 	if (!body) {
 		console.error("ERROR: 'authController.refreshAccessToken()' -> Missing Refresh Token or Username");
-		res.status(401).json({ message: "Refresh Token not provided", status: "error" });
+		res.status(401).json({ message: "'Refresh Token' or 'username' not provided in body", status: "error" });
 		return;
 	}
 

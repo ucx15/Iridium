@@ -130,3 +130,6 @@ const UserPage = () => {
 }
 
 export default UserPage
+
+// TODO: fetch user posts from API
+// TODO: fetch usable data from API
