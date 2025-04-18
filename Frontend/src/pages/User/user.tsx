@@ -120,10 +120,11 @@ const UserPage = () => {
 
 			<div className={styles.userFeed}>
 
-				<Post user={user} caption="Lorem ipsum dolor, sit amet consectetur adipisicing elit" images={[]} />
-				<Post user={user} caption="Lorem ipsum dolor, sit amet consectetur adipisicing elit" images={[]} />
-				<Post user={user} caption="Lorem ipsum dolor, sit amet consectetur adipisicing elit" images={[]} />
+				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
+				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
+				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
 
+				{/* TODO: Fetch user posts from API and render them here */}
 			</div>
 		</div>
 	)

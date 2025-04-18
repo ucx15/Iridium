@@ -5,31 +5,39 @@ import styles from './post.module.css';
 
 
 interface Props {
-	user: string;
-	caption: string;
-	images?: string[];
+	by: string;        // creator id
+	username: string;  // creator name
+
+	description: string;
+
+	createdAt?: Date;
+	media?: string[];
+
+	likes?: string[];
+	comments?: string[];
+	saves?: string[];
 }
 
 const Post = (props: Props) => {
 	return (
 		<div className={styles.post}>
-			<div className={styles.user}>{props.user}</div>
+			<div className={styles.user}> {props.username} <a href={`/u/${props.by}`}> {props.by}</a></div>
 
-			{/* What to do to render images if props.images has length > 0  */}
+			{/* What to do to render images if props.media has length > 0  */}
 
-			{props.images && props.images.length > 0 && (
+			{props.media && props.media.length > 0 && (
 				<div className={styles.images}>
-					{props.images.map((image, index) => (
+					{props.media.map((image, index) => (
 						<img
 							key={index}
 							src={image}
 							loading='lazy'
-							alt={`Post by ${props.user}`}
+							alt={`Post by ${props.by}`}
 						/>
 					))}
 				</div>
 			)}
-			<div className={styles.caption}>{props.caption}</div>
+			<div className={styles.caption}>{props.description}</div>
 
 			<div className={styles.reactions}>
 				<div className={styles.reaction}>

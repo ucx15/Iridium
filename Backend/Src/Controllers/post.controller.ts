@@ -6,6 +6,8 @@ import { randomUUID as uuid } from 'node:crypto';
 
 // Controllers and Models
 import Post from '../Models/post.model.js';
+import User from '../Models/user.model.js';
+
 import { addPost as userAddPost } from '../Controllers/user.controller.js';
 
 
@@ -106,10 +108,18 @@ const get : RequestHandler = async (req: Request, res: Response) => {
 		return;
 	}
 
+	const user = await User.details(post.by);
+
+	if (!user) {
+		console.log(`ERROR: User '${post.by}' does not exist. Changing post by to 'deleted'`);
+		post.by = 'deleted';
+	}
+
 	res.status(200).json({
 		message: 'Post fetched successfully',
 		status: 'success',
-		post
+		post,
+		user
 	});
 }
 

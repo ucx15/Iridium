@@ -46,6 +46,13 @@ const get = async (username: String) => {
 	return (await User.findOne({ username }));
 };
 
+const details = async (username: String) => {
+	return await User.findOne(
+		{ username },
+		{ password: 0, _id: 0, __v: 0, uuid: 0, deleted: 0, createdAt: 0, email: 0, saves: 0, likes: 0}
+	);
+}
+
 const addPost = async (username: string, postId: string) => {
 	const user = await User.findOne({ username });
 
@@ -83,4 +90,4 @@ const getAll = async () => {
 }
 
 
-export default { User, create, find, get, getAll, addPost, findPost, getAllPosts };
+export default { User, create, find, get, details, getAll, addPost, findPost, getAllPosts };

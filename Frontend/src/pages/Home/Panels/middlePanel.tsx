@@ -16,9 +16,23 @@ import BACKEND_URI from '../../../config';
 
 type PostData = {
 	by: string;
+	username: string;  // creator name
+
 	description: string;
+
+	createdAt?: Date;
 	media?: string[];
+
+	likes?: string[];
+	comments?: string[];
+	saves?: string[];
 }
+
+type UserData = {
+	username: string;  // creator name
+	name: string;      // creator name
+}
+
 
 const MiddlePanel = () => {
 	const username = LS.getUsername(); // get username from local storage
@@ -90,11 +104,21 @@ const MiddlePanel = () => {
 			}
 
 			else if (res.ok && data.status === 'success') {
-				const post : PostData = data.post as PostData;
+				const post: PostData = data.post as PostData;
+				const user : UserData = data.user as UserData;
+
 				posts.push({
 					by: post.by,
+					username: user.name,
+
 					description: post.description,
-					media: post.media
+					createdAt: post.createdAt,
+
+					media: post.media,
+
+					likes: post.likes,
+					comments: post.comments,
+					saves: post.saves,
 				});
 			}
 		}
@@ -126,7 +150,15 @@ const MiddlePanel = () => {
 				<PostCreator />
 
 				{posts.map((post, index) => (
-					<Post key={index} user={post.by} caption={post.description} images={post.media} />
+					<Post key = {index}
+					by = {post.by}
+					username = {post.username}
+					description = {post.description}
+					media = {post.media}
+					createdAt = {post.createdAt}
+					likes = {post.likes}
+					comments = {post.comments}
+					saves = {post.saves} />
 				))}
 
 			</div>
