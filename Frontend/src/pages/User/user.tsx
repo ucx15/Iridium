@@ -6,10 +6,11 @@ import Post from '../../components/Post/post';
 
 // Utils
 import * as LS from '../../utils/LocalStorage';
+import { refreshAccessToken } from '../../utils/JWT';
+import BACKEND_URI from '../../config';
 
 // Styles
 import styles from './user.module.css';
-import BACKEND_URI from '../../config';
 
 
 interface UserDataStruct {
@@ -29,7 +30,7 @@ const UserPage = () => {
 	const { userID } = useParams<{ userID: string }>();
 	const user: string = userID as string;
 	const [userData, setUserData] = React.useState<UserDataStruct | undefined>(undefined); // user data from API
-
+	const [posts, setPosts] = React.useState<Array<any>>([]); // user posts from API
 
 	const fetchUserData = async (whichUser : string) => {
 
@@ -59,6 +60,55 @@ const UserPage = () => {
 		}
 	}
 
+	// Function to populate user page with posts
+	const handlePopulateFeed = React.useCallback(async () => {
+		const postIDs = userData?.posts || [];
+		const postsLocal = [];
+
+		for (const postID of postIDs) {
+			const res = await fetch(`${BACKEND_URI}/post/${postID}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${LS.getAccessToken()}`
+				}
+			});
+
+			const data = await res.json();
+			console.log('Response:', data);
+			console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
+
+			if (res.status === 403) {
+				if (await refreshAccessToken()) {
+					handlePopulateFeed();
+				}
+				return;
+			}
+
+			else if (res.ok && data.status === 'success') {
+				const post = data.post;
+				const user = data.user;
+
+				postsLocal.push({
+					by: post.by,
+					username: user.name,
+
+					description: post.description,
+					createdAt: post.createdAt,
+
+					media: post.media,
+
+					likes: post.likes,
+					comments: post.comments,
+					saves: post.saves,
+				});
+			}
+		}
+
+		setPosts(postsLocal);
+	}, [userData]);
+
+
 	React.useEffect(() => {
 		if (userID) {
 			fetchUserData(userID);
@@ -81,6 +131,12 @@ const UserPage = () => {
 		}
 	}, [navigate, userID]);
 
+	// fetch user posts
+	React.useEffect(() => {
+		if (userID && userData) {
+			handlePopulateFeed();
+		}
+	}, [userData, userID]);
 
 	if (!userData) {
 		return (
@@ -120,9 +176,21 @@ const UserPage = () => {
 
 			<div className={styles.userFeed}>
 
+				{posts.map((post, index) => (
+					<Post key = {index}
+					by = {post.by}
+					username = {post.username}
+					description = {post.description}
+					media = {post.media}
+					createdAt = {post.createdAt}
+					likes = {post.likes}
+					comments = {post.comments}
+					saves = {post.saves} />
+				))}
+
+				{/* <Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
 				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
-				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
-				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
+				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} /> */}
 
 				{/* TODO: Fetch user posts from API and render them here */}
 			</div>

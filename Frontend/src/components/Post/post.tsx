@@ -1,4 +1,4 @@
-// import React from 'react'
+import React from 'react'
 
 // Styles
 import styles from './post.module.css';
@@ -19,6 +19,21 @@ interface Props {
 }
 
 const Post = (props: Props) => {
+	const [isSaved, setIsSaved] = React.useState(false);
+	const [isLiked, setIsLiked] = React.useState(false);
+
+	const [likeCount, setLikeCount] = React.useState(0);
+	const [commentCount, setCommentCount] = React.useState(0);
+
+	const handleLikeClick = () => {
+		setIsLiked(!isLiked);
+		if (isLiked) {
+			setLikeCount(likeCount - 1);
+		} else {
+			setLikeCount(likeCount + 1);
+		}
+	};
+
 	return (
 		<div className={styles.post}>
 			<div className={styles.user}> {props.username} <a href={`/u/${props.by}`}> {props.by}</a></div>
@@ -42,25 +57,26 @@ const Post = (props: Props) => {
 			<div className={styles.reactions}>
 				<div className={styles.reaction}>
 
-					<button className={[styles.likeButton, styles.reactionButton].join(' ')}>
+					<button className={[styles.likeButton, styles.reactionButton].join(' ')}
+					onClick={handleLikeClick} >
 						<img src="/Assets/Icons/heart.png" alt="like button icon" className={styles.iconImage}/>
 					</button>
 
-					<div className={styles.likeCount}>0</div>
+					<div className={styles.likeCount}>{likeCount}</div>
 				</div>
 
 				<div className={styles.reaction}>
 					<button className={[styles.commentButton, styles.reactionButton].join(' ')}>
 						<img src="/Assets/Icons/message.png" alt="comment button icon" className={styles.iconImage}/>
 					</button>
-					<div className={styles.likeCount}>0</div>
+					<div className={styles.likeCount}>{commentCount}</div>
 				</div>
 
 				<div className={styles.reaction}>
 					<button className={[styles.shareButton, styles.reactionButton].join(' ')}>
 					<img src="/Assets/Icons/paper-plane.png" alt="share button icon" className={styles.iconImage}/>
 					</button>
-					<div className={styles.likeCount}>0</div>
+					<div className={styles.likeCount}>{isSaved}</div>
 				</div>
 
 			</div>

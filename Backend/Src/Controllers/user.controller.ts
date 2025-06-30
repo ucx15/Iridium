@@ -191,6 +191,7 @@ const getUser: RequestHandler = async (req: Request, res: Response) => {
 
 		followers: user.followers,
 		following: user.following,
+		posts : user.posts
 	}
 
 	res.json({
