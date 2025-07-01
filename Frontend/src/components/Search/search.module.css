@@ -1,6 +1,57 @@
 .search {
+	display: flex;
+	flex-direction: column;
+
+	justify-content: center;
+	gap: 1rem;
 
 	width: 80%;
-	height: 2rem;
+
+	& input {
+		outline: none;
+		width: 80%;
+		height: 2rem;
+		padding: .5rem;
+
+		border: .2rem solid darkslategray;
+		border-radius: 0.5rem;
+		font-size: 1rem;
+
+		background-color: #f0f0f0;
+	}
+
+	& button {
+		width: 2rem;
+		height: 2rem;
+		font-size: 1.5rem;
+		background: none;
+		cursor: pointer;
+	}
+
+	& ul {
+		text-align: left;
+		list-style-type: none;
+		width: 100%;
+	}
+
+	& li {
+		padding: 0.5rem;
+		border-bottom: .1em solid transparent;
+		transition: all 0.3s ease-in-out;
+		cursor: pointer;
+		color: indianred;
+		font-size: 1.2rem;
+		font-style: italic;
+
+		&:hover {
+			border-color: black;
+		}
+	}
+
+	& a {
+		text-decoration: none;
+		color: inherit;
+	}
 
 }
+

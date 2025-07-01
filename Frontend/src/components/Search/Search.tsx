@@ -17,7 +17,7 @@ const Search = () => {
   const performSearch = async (query: string) => {
     setSearchResults([]);
 
-    if ( query ) {
+    if (query) {
       console.log(`Searching for: ${query}`);
       const response = await fetch(
         `${BACKEND_URI}/search`,
@@ -42,19 +42,12 @@ const Search = () => {
       }
 
     }
+
   }
 
-    // Debounce searchTerm
+  // Search while typing
   React.useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchTerm.trim() !== '') {
-        performSearch(searchTerm);
-      } else {
-        setSearchResults([]);
-      }
-    }, 150); // Adjust delay here (between 100-200ms)
-
-    return () => clearTimeout(delayDebounce);
+    performSearch(searchTerm);
   }, [searchTerm]);
 
 
@@ -63,18 +56,17 @@ const Search = () => {
 
       <h2>Search</h2>
 
-      <input type="text" value={searchTerm || ''} onChange={(e) => setSearchTerm(e.target.value)} />
-
-      <button onClick={() => performSearch(searchTerm)}>🔍</button>
+      <div>
+        <input type="text" value={searchTerm || ''} onChange={(e) => setSearchTerm(e.target.value)} />
+        <button onClick={() => performSearch(searchTerm)}>🔍</button>
+      </div>
 
       <div>
         <ul>
           {searchResults.map(user => (
-            <a href={`/u/${user}`}>
-
-              <li key={user}>{user}</li>
-
-            </a>
+            <li key={user}>
+              <a href={`/u/${user}`}> {user} </a>
+            </li>
           ))}
         </ul>
 
