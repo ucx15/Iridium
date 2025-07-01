@@ -42,6 +42,16 @@ const find = async (username: String) => {
 	return (await User.findOne({ username })) ? true : false;
 };
 
+const search = async (query: String) => {
+	// Fuzzy search for users by username or name
+	return await User.find(
+		{$or: [
+			{ username: { $regex: query, $options: 'i' } },
+			{ name: { $regex: query, $options: 'i' } }
+		]},
+		{username: 1, _id: 0});
+}
+
 const get = async (username: String) => {
 	return (await User.findOne({ username }));
 };
@@ -90,4 +100,4 @@ const getAll = async () => {
 }
 
 
-export default { User, create, find, get, details, getAll, addPost, findPost, getAllPosts };
+export default { User, create, find, search, get, details, getAll, addPost, findPost, getAllPosts };

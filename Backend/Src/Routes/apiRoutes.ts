@@ -10,6 +10,7 @@ import { RequestHandler } from 'express';
 import * as authController from '../Controllers/auth.controller.js';
 import * as userController from '../Controllers/user.controller.js';
 import * as postController from '../Controllers/post.controller.js';
+import * as searchController from '../Controllers/search.controller.js';
 
 
 const router = Router();
@@ -27,6 +28,10 @@ router.post('/my-feed', authController.authorize, userController.myFeed);
 // post routes
 router.post('/post/create', authController.authorize, postController.create);
 router.get('/post/:id', authController.authorize, postController.get);
+
+// search routes
+router.post('/search', authController.authorize, searchController.search);
+
 
 // wildcard route
 router.get('/', (req, res) => {
