@@ -17,7 +17,7 @@ const Search = () => {
   const performSearch = async (query: string) => {
     setSearchResults([]);
 
-    if (query) {
+    if (query.trim() !== '') {
       console.log(`Searching for: ${query}`);
       const response = await fetch(
         `${BACKEND_URI}/search`,
@@ -33,8 +33,7 @@ const Search = () => {
 
       const data = await response.json();
       console.log(data);
-      console.log(data);
-      console.log(`searchResults ${searchResults}`);
+      // console.log(`searchResults ${searchResults}`);
 
       if (data.status === "success") {
         setSearchResults(data.users);
@@ -47,7 +46,11 @@ const Search = () => {
 
   // Search while typing
   React.useEffect(() => {
-    performSearch(searchTerm);
+    const delayDebounce = setTimeout(() => {
+      performSearch(searchTerm);
+    }, 250);
+
+    return () => clearTimeout(delayDebounce);
   }, [searchTerm]);
 
 

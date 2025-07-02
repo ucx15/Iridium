@@ -1,0 +1,117 @@
+C:\Users\iuc15\Dev\Web\Project-Iridium
++---.vscode
+|   └---tasks.json
++---Backend
+|   +---Dist
+|   |   +---Controllers
+|   |   |   +---auth.controller.js
+|   |   |   +---auth.js
+|   |   |   +---post.controller.js
+|   |   |   +---search.controller.js
+|   |   |   +---user.controller.js
+|   |   |   └---user.js
+|   |   +---Models
+|   |   |   +---post.js
+|   |   |   +---post.model.js
+|   |   |   +---user.js
+|   |   |   └---user.model.js
+|   |   +---Routes
+|   |   |   +---apiRoutes.js
+|   |   |   └---defaultRoutes.js
+|   |   +---server.js
+|   |   └---utils.js
+|   +---Src
+|   |   +---Controllers
+|   |   |   +---auth.controller.ts
+|   |   |   +---post.controller.ts
+|   |   |   +---search.controller.ts
+|   |   |   └---user.controller.ts
+|   |   +---Models
+|   |   |   +---post.model.ts
+|   |   |   └---user.model.ts
+|   |   +---Routes
+|   |   |   +---apiRoutes.ts
+|   |   |   └---defaultRoutes.ts
+|   |   +---server.ts
+|   |   └---utils.ts
+|   +---types
+|   |   └---express.d.ts
+|   +---.env
+|   +---package-lock.json
+|   +---package.json
+|   └---tsconfig.json
++---Frontend
+|   +---dist
+|   |   +---assets
+|   |   |   +---index-CBqo5QUy.js
+|   |   |   └---index-CtVPRzAG.css
+|   |   +---index.html
+|   |   └---vite.svg
+|   +---public
+|   |   └---Assets
+|   |       +---Icons
+|   |       |   +---chick.png
+|   |       |   +---heart.png
+|   |       |   +---message.png
+|   |       |   └---paper-plane.png
+|   |       └---Images
+|   |           └---userProfile.png
+|   +---src
+|   |   +---components
+|   |   |   +---AuthForm
+|   |   |   |   +---authForm.css
+|   |   |   |   └---AuthForm.tsx
+|   |   |   +---Post
+|   |   |   |   +---post.module.css
+|   |   |   |   └---post.tsx
+|   |   |   +---PostCreator
+|   |   |   |   +---postCreator.module.css
+|   |   |   |   └---postCreator.tsx
+|   |   |   └---Search
+|   |   |       +---search.module.css
+|   |   |       └---Search.tsx
+|   |   +---pages
+|   |   |   +---Auth
+|   |   |   |   +---auth.module.css
+|   |   |   |   └---auth.tsx
+|   |   |   +---Home
+|   |   |   |   +---Panels
+|   |   |   |   |   +---leftPanel.module.css
+|   |   |   |   |   +---leftPanel.tsx
+|   |   |   |   |   +---middlePanel.module.css
+|   |   |   |   |   +---middlePanel.tsx
+|   |   |   |   |   +---panel.module.css
+|   |   |   |   |   +---rightPanel.module.css
+|   |   |   |   |   └---rightPanel.tsx
+|   |   |   |   +---home.module.css
+|   |   |   |   └---home.tsx
+|   |   |   +---NotFound
+|   |   |   |   +---notFound.module.css
+|   |   |   |   └---notFound.tsx
+|   |   |   └---User
+|   |   |       +---user.module.css
+|   |   |       └---user.tsx
+|   |   +---utils
+|   |   |   +---JWT.ts
+|   |   |   └---LocalStorage.ts
+|   |   +---App.css
+|   |   +---App.tsx
+|   |   +---config.ts
+|   |   +---index.css
+|   |   +---main.tsx
+|   |   └---vite-env.d.ts
+|   +---.gitignore
+|   +---eslint.config.js
+|   +---index.html
+|   +---package-lock.json
+|   +---package.json
+|   +---README.md
+|   +---tsconfig.app.json
+|   +---tsconfig.json
+|   +---tsconfig.node.json
+|   └---vite.config.ts
++---.gitignore
++---LICENSE
++---Project-Iridium.code-workspace
++---ReadMe.md
+└---tree.txt
