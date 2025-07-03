@@ -12,3 +12,5 @@ package-lock.json
 
 # Env files
 .env*
+
+Frontend/src/config.ts
