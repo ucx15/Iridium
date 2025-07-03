@@ -12,6 +12,19 @@ import BACKEND_URI from '../../config';
 // Styles
 import styles from './user.module.css';
 
+type PostData = {
+	by: string;
+	username: string;  // creator name
+
+	description: string;
+
+	createdAt?: Date;
+	media?: string[];
+
+	likes?: string[];
+	comments?: string[];
+	saves?: string[];
+}
 
 interface UserDataStruct {
 	username: string;
@@ -28,9 +41,9 @@ const UserPage = () => {
 	const username = LS.getUsername(); // get username from local storage
 
 	const { userID } = useParams<{ userID: string }>();
-	const user: string = userID as string;
+	// const user: string = userID as string;
 	const [userData, setUserData] = React.useState<UserDataStruct | undefined>(undefined); // user data from API
-	const [posts, setPosts] = React.useState<Array<any>>([]); // user posts from API
+	const [posts, setPosts] = React.useState<PostData[]>([]); // user posts from API
 
 	const fetchUserData = async (whichUser : string) => {
 
@@ -136,7 +149,7 @@ const UserPage = () => {
 		if (userID && userData) {
 			handlePopulateFeed();
 		}
-	}, [userData, userID]);
+	}, [handlePopulateFeed, userData, userID]);
 
 	if (!userData) {
 		return (
