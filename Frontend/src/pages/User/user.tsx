@@ -47,7 +47,7 @@ const UserPage = () => {
 
 	const fetchUserData = async (whichUser : string) => {
 
-		console.log(whichUser);
+		// console.log(whichUser);
 		const response = await fetch(`${BACKEND_URI}/user/${whichUser}`, {
 			method: 'GET',
 			headers: {
@@ -64,7 +64,7 @@ const UserPage = () => {
 		// console.log(data);
 
 		if (data.status === 'success') {
-			console.log('User data fetched successfully');
+			// console.log('User data fetched successfully');
 			// Handle user data here
 			setUserData(data.userData);
 		}
@@ -88,8 +88,8 @@ const UserPage = () => {
 			});
 
 			const data = await res.json();
-			console.log('Response:', data);
-			console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
+			// console.log('Response:', data);
+			// console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
 
 			if (res.status === 403) {
 				if (await refreshAccessToken()) {
