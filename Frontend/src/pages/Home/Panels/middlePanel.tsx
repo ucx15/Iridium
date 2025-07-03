@@ -59,8 +59,8 @@ const MiddlePanel = () => {
 			})
 
 			const data = await res.json();
-			console.log('Response:', data);
-			console.log(`handlePost() -> '${data.status}' : ${data.message}`);
+			// console.log('Response:', data);
+			// console.log(`handlePost() -> '${data.status}' : ${data.message}`);
 
 			// Handle token expiration
 			if (res.status === 403) {
@@ -93,8 +93,8 @@ const MiddlePanel = () => {
 			});
 
 			const data = await res.json();
-			console.log('Response:', data);
-			console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
+			// console.log('Response:', data);
+			// console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
 
 			if (res.status === 403) {
 				if (await refreshAccessToken()) {

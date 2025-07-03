@@ -1,11 +1,11 @@
 
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+// import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 // styles
-import defaultStyles from './panel.module.css'
-import styles from './leftPanel.module.css'
+import defaultStyles from './panel.module.css';
+import styles from './leftPanel.module.css';
 
 // utils
 import * as LS from '../../../utils/LocalStorage.js';

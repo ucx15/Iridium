@@ -25,6 +25,13 @@ const Post = (props: Props) => {
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [commentCount, setCommentCount] = React.useState(0);
 
+	// Boilerplate for likes and comments
+	React.useEffect(() => {
+		setIsSaved(false);
+		setCommentCount(0);
+	}, []);
+
+
 	const handleLikeClick = () => {
 		setIsLiked(!isLiked);
 		if (isLiked) {
