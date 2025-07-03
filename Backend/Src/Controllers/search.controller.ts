@@ -39,6 +39,8 @@ const search: RequestHandler = async (req: Request, res: Response) => {
   // const returnData = users.map(user => user.username);
   const returnData = users.map(({_id, ...rest}) => rest);
 
+  console.log(returnData);
+
   res.status(200).json({
     message: 'Search results found',
     status: 'success',
