@@ -13,7 +13,7 @@ import validateRequestBody from '../utils.js';
 
 dotenv.config();
 
-const search: RequestHandler = async (req : Request, res : Response) => {
+const search: RequestHandler = async (req: Request, res: Response) => {
   const { body } = validateRequestBody(req.body, ['query']);
 
   if (!body || !body.query) {
@@ -28,20 +28,22 @@ const search: RequestHandler = async (req : Request, res : Response) => {
   const users = await User.search(query);
 
   if (!users || users.length === 0) {
-	res.status(404).json({
-	  message: 'No users found',
-	  status: 'error',
-    users : null
-	});
-	return;
+    res.status(404).json({
+      message: 'No users found',
+      status: 'error',
+      users: null
+    });
+    return;
   }
-  const returnData = users.map(user => user.username);
+
+  // const returnData = users.map(user => user.username);
+  const returnData = users.map(({_id, ...rest}) => rest);
 
   res.status(200).json({
-		message: 'Search results found',
+    message: 'Search results found',
     status: 'success',
     users: returnData,
   });
 }
 
-export {search};
+export { search };

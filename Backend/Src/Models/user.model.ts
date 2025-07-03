@@ -49,7 +49,9 @@ const search = async (query: String) => {
 			{ username: { $regex: query, $options: 'i' } },
 			{ name: { $regex: query, $options: 'i' } }
 		]},
-		{username: 1, _id: 0});
+		{limit: 15},
+		{select: 'username name profilePicture'}
+	).lean();
 }
 
 const get = async (username: String) => {

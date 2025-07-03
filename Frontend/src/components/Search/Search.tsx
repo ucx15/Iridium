@@ -8,17 +8,21 @@ import * as LS from '../../utils/LocalStorage';
 // import { refreshAccessToken } from '../../utils/JWT';
 import BACKEND_URI from '../../config';
 
+type SearchedUser = {
+  username: string;
+  name: string;
+  profilePicture: string;
+}
 
 const Search = () => {
 
   const [searchTerm, setSearchTerm] = React.useState<string>("");
-  const [searchResults, setSearchResults] = React.useState<string[]>([]);
+  const [searchResults, setSearchResults] = React.useState<SearchedUser[]>([]);
 
   const performSearch = async (query: string) => {
     setSearchResults([]);
 
     if (query.trim() !== '') {
-      console.log(`Searching for: ${query}`);
       const response = await fetch(
         `${BACKEND_URI}/search`,
         {
@@ -32,12 +36,9 @@ const Search = () => {
       );
 
       const data = await response.json();
-      console.log(data);
-      // console.log(`searchResults ${searchResults}`);
-
       if (data.status === "success") {
         setSearchResults(data.users);
-        console.log(`searchResults ${searchResults}`);
+        console.log("Search results:", data.users);
       }
 
     }
@@ -67,8 +68,10 @@ const Search = () => {
       <div>
         <ul>
           {searchResults.map(user => (
-            <li key={user}>
-              <a href={`/u/${user}`}> {user} </a>
+            <li key={user.username}>
+              <a href={`/u/${user.username}`}>
+                <span>{user.username}</span> - <span>{user.name}</span>
+              </a>
             </li>
           ))}
         </ul>
