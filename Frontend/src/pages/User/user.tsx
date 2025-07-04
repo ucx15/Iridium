@@ -40,11 +40,20 @@ const UserPage = () => {
 
 	const username = LS.getUsername(); // get username from local storage
 
-	const { userID } = useParams<{ userID: string }>();
+	const { userID } = useParams<{ userID: string }>() as { userID: string }; // get userID from URL params
 	// const user: string = userID as string;
+
+	// --- States ---
 	const [userData, setUserData] = React.useState<UserDataStruct | undefined>(undefined); // user data from API
 	const [posts, setPosts] = React.useState<PostData[]>([]); // user posts from API
 
+	const [followerCount, setFollowerCount] = React.useState<number>(0); // number of followers
+	const [followingCount, setFollowingCount] = React.useState<number>(0); // number of following
+	const [isFollowing, setIsFollowing] = React.useState<boolean>(false); // is user following the user in URL
+
+
+	// --- Handler functions ---
+	// Function to fetch user data from API
 	const fetchUserData = async (whichUser : string) => {
 
 		// console.log(whichUser);
@@ -121,7 +130,85 @@ const UserPage = () => {
 		setPosts(postsLocal);
 	}, [userData]);
 
+	// Function to handle follow action
+	const handleFollowUser = async (followee : string) => {
 
+		const response = await fetch(`${BACKEND_URI}/follow`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${LS.getAccessToken()}`,
+			},
+			body: JSON.stringify({
+				follower: username,
+				followee
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to follow user');
+		}
+
+		const data = await response.json();
+
+		if (data.status === 'success') {
+			setIsFollowing(true);
+		} else {
+			console.error('Failed to follow user:', data.message);
+		}
+	}
+
+	// Function to handle unfollow action
+	const handleUnfollowUser = async (unfollowee : string) => {
+
+		const response = await fetch(`${BACKEND_URI}/unfollow`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${LS.getAccessToken()}`,
+			},
+
+			body: JSON.stringify({
+				unfollower: username,
+				unfollowee
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to unfollow user');
+		}
+
+		const data = await response.json();
+
+		if (data.status === 'success') {
+			setIsFollowing(false);
+		} else {
+			console.error('Failed to unfollow user:', data.message);
+		}
+	}
+
+	const handleFollowButtonClick = async () => {
+		if (userID === username) {
+			console.error('ERROR: handleFollowButtonClick() -> Cannot follow/unfollow yourself');
+			return;
+		}
+
+		if (isFollowing) {
+			await handleUnfollowUser(userID);
+			setFollowerCount(followerCount - 1);
+			setIsFollowing(false);
+		}
+
+		else {
+			await handleFollowUser(userID);
+			setFollowerCount(followerCount + 1);
+			setIsFollowing(true);
+		}
+	}
+
+	// --- useEffect Hooks ---
+
+	// fetch user data when userID changes
 	React.useEffect(() => {
 		if (userID) {
 			fetchUserData(userID);
@@ -144,12 +231,24 @@ const UserPage = () => {
 		}
 	}, [navigate, userID]);
 
-	// fetch user posts
+	// UPDATE states when userData changes
 	React.useEffect(() => {
 		if (userID && userData) {
 			handlePopulateFeed();
+
+			if (userData.followers.includes(username as string)) {
+				setIsFollowing(true);
+			}
+			else {
+				setIsFollowing(false);
+			}
+
+			setFollowerCount(userData.followers.length);
+			setFollowingCount(userData.following.length);
+
 		}
-	}, [handlePopulateFeed, userData, userID]);
+	}, [handlePopulateFeed, userData, userID, username]);
+
 
 	if (!userData) {
 		return (
@@ -176,13 +275,13 @@ const UserPage = () => {
 					</div>
 
 					<div className={styles.userStats}>
-						<p>Followers: {userData.followers.length}</p>
-						<p>Following: {userData.following.length}</p>
+						<p>Followers: {followerCount} [{userData.followers}]</p>
+						<p>Following: {followingCount} [{userData.following}]</p>
 					</div>
 				</div>
 
 				<div className={styles.userActions}>
-					<button className={styles.followButton}>Follow</button>
+					<button className={styles.followButton} onClick={handleFollowButtonClick}> {isFollowing ? 'Unfollow' : 'Follow'} </button>
 					{/* <button className={styles.messageButton}>Message</button> */}
 				</div>
 			</div>

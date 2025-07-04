@@ -119,7 +119,6 @@ const followUser = async (follower: string, followee: string) => {
 	await followerUser.save();
 	await followeeUser.save();
 
-	console.log(`INFO: User '${follower}' followed '${followee}'`);
 	return true;
 }
 
@@ -146,7 +145,6 @@ const unfollowUser = async (unfollower: string, unfollowee: string) => {
 	await unfollowerUser.save();
 	await unfolloweeUser.save();
 
-	console.log(`INFO: User '${unfollower}' unfollowed '${unfollowee}'`);
 	return true;
 }
 

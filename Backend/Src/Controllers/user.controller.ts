@@ -230,6 +230,15 @@ const followUser : RequestHandler = async (req: Request, res: Response) => {
 		return;
 	}
 
+	if (follower === followee) {
+		console.log(`ERROR: User '${follower}' cannot follow themselves`);
+		res.status(400).json({
+			message: `User '${follower}' cannot follow themselves`,
+			status: 'error'
+		});
+		return;
+	}
+
 	// follower already follows followee
 	// or followee already has the follower
 	if (
@@ -277,6 +286,15 @@ const unfollowUser : RequestHandler = async (req: Request, res: Response) => {
 	const { unfollower, unfollowee } = body;
 	console.log(`POST: Unfollow User '${unfollower}' -> '${unfollowee}'`);
 
+	if (unfollower === unfollowee) {
+		console.log(`ERROR: User '${unfollower}' cannot unfollow themselves`);
+		res.status(400).json({
+			message: `User '${unfollower}' cannot unfollow themselves`,
+			status: 'error'
+		});
+		return;
+	}
+
 	const unfollowerUser = await User.get(unfollower);
 	const unfolloweeUser = await User.get(unfollowee);
 
@@ -318,7 +336,7 @@ const unfollowUser : RequestHandler = async (req: Request, res: Response) => {
 		status: 'success'
 	});
 
-	console.log(`INFO: User '${unfollower}' unfollowed '${unfollowee}'`);
+	console.log(`INFO: !User '${unfollower}' unfollowed '${unfollowee}'`);
 }
 
 // Functions

@@ -24,6 +24,9 @@ router.post('/refresh-token', authController.refreshAccessToken);
 // user routes
 router.get('/user/:id', userController.getUser);
 router.post('/my-feed', authController.authorize, userController.myFeed);
+router.post('/follow', authController.authorize, userController.followUser);
+router.post('/unfollow', authController.authorize, userController.unfollowUser);
+
 
 // post routes
 router.post('/post/create', authController.authorize, postController.create);
