@@ -96,10 +96,65 @@ const getAllPosts = async (username: string): Promise<any> => {
 	return user.posts;
 }
 
+const followUser = async (follower: string, followee: string) => {
+	// follower : username of the user who is following
+	// followee : username of the user who is being followed
+
+	const followerUser = await User.findOne({ username: follower });
+	const followeeUser = await User.findOne({ username: followee });
+
+	if (!followerUser || !followeeUser) {
+		console.log(`DB ERROR: User '${follower}' or '${followee}' does not exist`);
+		return false;
+	}
+
+	if (followerUser.following.includes(followee) || followeeUser.followers.includes(follower)) {
+		console.log(`WARN: User '${follower}' already follows '${followee}'`);
+		return false;
+	}
+
+	followerUser.following.push(followee);
+	followeeUser.followers.push(follower);
+
+	await followerUser.save();
+	await followeeUser.save();
+
+	console.log(`INFO: User '${follower}' followed '${followee}'`);
+	return true;
+}
+
+const unfollowUser = async (unfollower: string, unfollowee: string) => {
+	// unfollower : username of the user who is unfollowing
+	// unfollowee : username of the user who is being unfollowed
+
+	const unfollowerUser = await User.findOne({ username: unfollower });
+	const unfolloweeUser = await User.findOne({ username: unfollowee });
+
+	if (!unfollowerUser || !unfolloweeUser) {
+		console.log(`DB ERROR: User '${unfollower}' or '${unfollowee}' does not exist`);
+		return false;
+	}
+
+	if (!unfollowerUser.following.includes(unfollowee) || !unfolloweeUser.followers.includes(unfollower)) {
+		console.log(`WARN: User '${unfollower}' is not following '${unfollowee}'`);
+		return false;
+	}
+
+	unfollowerUser.following.splice(unfollowerUser.following.indexOf(unfollowee), 1);
+	unfolloweeUser.followers.splice(unfolloweeUser.followers.indexOf(unfollower), 1);
+
+	await unfollowerUser.save();
+	await unfolloweeUser.save();
+
+	console.log(`INFO: User '${unfollower}' unfollowed '${unfollowee}'`);
+	return true;
+}
+
+
 // For debugging
 const getAll = async () => {
 	return (await User.find({}));
 }
 
 
-export default { User, create, find, search, get, details, getAll, addPost, findPost, getAllPosts };
+export default { User, create, find, search, get, details, getAll, addPost, findPost, getAllPosts, followUser, unfollowUser};

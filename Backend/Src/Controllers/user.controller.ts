@@ -203,6 +203,124 @@ const getUser: RequestHandler = async (req: Request, res: Response) => {
 	console.log(`INFO: Fetched user '${userID}'`);
 }
 
+const followUser : RequestHandler = async (req: Request, res: Response) => {
+	const {body} = validateRequestBody(req.body, ['follower', 'followee']);
+
+	if ( !body ) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	const { follower, followee } = body;
+	console.log(`POST: Follow User '${follower}' -> '${followee}'`);
+
+	const followerUser = await User.get(follower);
+	const followeeUser = await User.get(followee);
+
+	if ( !followerUser || !followeeUser ) {
+		console.log(`ERROR: User '${follower}' or '${followee}' does not exist`);
+		res.status(400).json({
+			message: `User '${follower}' or '${followee}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// follower already follows followee
+	// or followee already has the follower
+	if (
+		followerUser.following.includes(followee) ||
+		followeeUser.followers.includes(follower)) {
+		console.log(`WARN: User '${follower}' already follows '${followee}'`);
+
+		res.status(400).json({
+			message: `User '${follower}' already follows '${followee}'`,
+			status: 'error'
+		});
+
+		return;
+	}
+
+	if (! await User.followUser(follower, followee) )  {
+		console.log(`ERROR: Unable to follow user '${followee}'`);
+		res.status(500).json({
+			message: `Unable to follow user '${followee}'`,
+			status: 'error'
+		});
+		return;
+	}
+
+	res.status(200).json({
+		message: `User '${follower}' followed '${followee}' successfully`,
+		status: 'success'
+	});
+
+	console.log(`INFO: User '${follower}' followed '${followee}'`);
+}
+
+const unfollowUser : RequestHandler = async (req: Request, res: Response) => {
+	const {body} = validateRequestBody(req.body, ['unfollower', 'unfollowee']);
+
+	if ( !body ) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	const { unfollower, unfollowee } = body;
+	console.log(`POST: Unfollow User '${unfollower}' -> '${unfollowee}'`);
+
+	const unfollowerUser = await User.get(unfollower);
+	const unfolloweeUser = await User.get(unfollowee);
+
+	if ( !unfollowerUser || !unfolloweeUser ) {
+		console.log(`ERROR: User '${unfollower}' or '${unfollowee}' does not exist`);
+		res.status(400).json({
+			message: `User '${unfollower}' or '${unfollowee}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// unfollower already follows unfollowee
+	// or unfollowee already has the unfollower
+	if (
+		!unfollowerUser.following.includes(unfollowee) ||
+		!unfolloweeUser.followers.includes(unfollower)) {
+		console.log(`WARN: User '${unfollower}' is not following '${unfollowee}'`);
+
+		res.status(400).json({
+			message: `User '${unfollower}' is not following '${unfollowee}'`,
+			status: 'error'
+		});
+
+		return;
+	}
+
+	if (! await User.unfollowUser(unfollower, unfollowee) )  {
+		console.log(`ERROR: Unable to unfollow user '${unfollowee}'`);
+		res.status(500).json({
+			message: `Unable to unfollow user '${unfollowee}'`,
+			status: 'error'
+		});
+		return;
+	}
+
+	res.status(200).json({
+		message: `User '${unfollower}' unfollowed '${unfollowee}' successfully`,
+		status: 'success'
+	});
+
+	console.log(`INFO: User '${unfollower}' unfollowed '${unfollowee}'`);
+}
+
 // Functions
 const addPost = async (username : string, postID : string) : Promise<boolean> => {
 	const user = await User.get(username);
@@ -223,4 +341,7 @@ const addPost = async (username : string, postID : string) : Promise<boolean> =>
 	return true;
 }
 
-export { signup, login , myFeed, addPost, getUser};
+export { signup, login , myFeed, addPost, getUser, followUser, unfollowUser};
+
+
+// TODO: ⚠️IMPORTANT - match body usernames with req.username for authorization in each request⚠️
