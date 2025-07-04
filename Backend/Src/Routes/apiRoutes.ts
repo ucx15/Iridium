@@ -30,6 +30,7 @@ router.post('/unfollow', authController.authorize, userController.unfollowUser);
 
 // post routes
 router.post('/post/create', authController.authorize, postController.create);
+router.post('/posts/batch-fetch', authController.authorize, postController.getBatch);
 router.get('/post/:id', authController.authorize, postController.get);
 
 // search routes

@@ -39,5 +39,14 @@ const get = async (uuid : String) => {
 	return (await Post.findOne({ uuid }));
 };
 
+const getBatch = async (postIDs: string[]) => {
+	const posts = await Post.find({ uuid: { $in: postIDs } });
 
-export default { Post,  create, find, get };
+	if (!posts || posts.length === 0) {
+		return [];
+	}
+
+	return posts;
+};
+
+export default { Post,  create, find, get, getBatch};

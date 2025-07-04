@@ -23,7 +23,7 @@ dotenv.config();
 
 
 // Request Handlers
-const create : RequestHandler = async (req: Request, res: Response) => {
+const create: RequestHandler = async (req: Request, res: Response) => {
 	const { body, optional } = validateRequestBody(req.body, ['username', 'description'], ['media'])
 
 	if (!body) {
@@ -58,7 +58,7 @@ const create : RequestHandler = async (req: Request, res: Response) => {
 
 	// Sanity Check if 'POST' already in user's posts
 	// NOTE: Not required
-	if ( !await userAddPost(body.username, postID) ) {
+	if (!await userAddPost(body.username, postID)) {
 		const errMsg = `Failed to add post for user '${body.username}'`;
 		console.log(`ERROR: ${errMsg}`);
 		res.status(500).json({
@@ -83,7 +83,7 @@ const create : RequestHandler = async (req: Request, res: Response) => {
 	console.log(`INFO: Post by '${body.username}' created successfully\n`);
 }
 
-const get : RequestHandler = async (req: Request, res: Response) => {
+const get: RequestHandler = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
 	// const { body } = validateRequestBody(req.body, ['postID']);
@@ -123,4 +123,17 @@ const get : RequestHandler = async (req: Request, res: Response) => {
 	});
 }
 
-export { create, get};
+const getBatch: RequestHandler = async (req: Request, res: Response) => {
+	const { postIDs } = req.body;
+	// console.log(postIDs)
+
+	const posts = await Post.getBatch(postIDs);
+
+	res.status(200).json({
+		posts,
+		message: 'Batch fetch successful',
+		status: 'success',
+	});
+}
+
+export { create, get, getBatch };

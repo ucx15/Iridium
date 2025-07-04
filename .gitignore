@@ -12,3 +12,6 @@ package-lock.json
 
 # Env files
 .env*
+
+# Test files
+test*

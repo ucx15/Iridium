@@ -85,49 +85,39 @@ const UserPage = () => {
 	// Function to populate user page with posts
 	const handlePopulateFeed = React.useCallback(async () => {
 		const postIDs = userData?.posts || [];
-		const postsLocal = [];
 
-		for (const postID of postIDs) {
-			const res = await fetch(`${BACKEND_URI}/post/${postID}`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${LS.getAccessToken()}`
-				}
-			});
 
-			const data = await res.json();
-			// console.log('Response:', data);
-			// console.log(`handlePopulateFeed() -> '${data.status}' : ${data.message}`);
+		// TODO: implement large post array fetching using block of 10 or reasonable number
 
-			if (res.status === 403) {
-				if (await refreshAccessToken()) {
-					handlePopulateFeed();
-				}
-				return;
+		// if (postIDs.length > 10) {
+		// }
+		// else {
+		// }
+
+		const res = await fetch(`${BACKEND_URI}/posts/batch-fetch`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${LS.getAccessToken()}`
+			},
+			body: JSON.stringify({
+				postIDs
+			})
+		});
+
+		const data = await res.json();
+
+		if (res.status === 403) {
+			if (await refreshAccessToken()) {
+				handlePopulateFeed();
 			}
-
-			else if (res.ok && data.status === 'success') {
-				const post = data.post;
-				const user = data.user;
-
-				postsLocal.push({
-					by: post.by,
-					username: user.name,
-
-					description: post.description,
-					createdAt: post.createdAt,
-
-					media: post.media,
-
-					likes: post.likes,
-					comments: post.comments,
-					saves: post.saves,
-				});
-			}
+			return;
 		}
 
-		setPosts(postsLocal);
+		else if (res.ok && data.status === 'success') {
+			setPosts(data.posts);
+		}
+
 	}, [userData]);
 
 	// Function to handle follow action
