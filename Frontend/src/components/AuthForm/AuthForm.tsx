@@ -34,14 +34,14 @@ const AuthForm = () => {
       cnfPassword: ''
     };
 
-    const username: string = (document.getElementById('input-username') as HTMLInputElement).value.trim();
+    const username: string = (document.getElementById('input-username') as HTMLInputElement).value.trim().toLowerCase();
     const password: string = (document.getElementById('input-password') as HTMLInputElement).value.trim();
 
     submitData['username'] = username;
     submitData['password'] = password;
 
     if (authType === 'signup') {
-      const email: string = (document.getElementById('input-email') as HTMLInputElement).value.trim();
+      const email: string = (document.getElementById('input-email') as HTMLInputElement).value.trim().toLowerCase();
       const name: string = (document.getElementById('input-name') as HTMLInputElement).value.trim();
       const cnfPassword: string = (document.getElementById('input-cnf-password') as HTMLInputElement).value.trim();
 

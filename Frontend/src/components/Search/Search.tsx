@@ -19,6 +19,8 @@ const Search = () => {
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<SearchedUser[]>([]);
 
+  // TODO: add refresh token logic if access token is expired
+  // TODO: add error handling for fetch requests
   const performSearch = async (query: string) => {
     setSearchResults([]);
 

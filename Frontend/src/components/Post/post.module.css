@@ -29,6 +29,7 @@
 	}
 
 	.caption {
+		white-space:pre-wrap;
 		width: 100%;
 		padding: .8em 1em;
 	}
