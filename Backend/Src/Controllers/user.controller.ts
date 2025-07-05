@@ -153,7 +153,7 @@ const myFeed : RequestHandler = async (req: Request, res: Response) => {
 		status: 'success',
 		feed: posts
 	});
-	console.log(`INFO: Fetched feed for '${username}'`);
+	// console.log(`INFO: Fetched feed for '${username}'`);
 }
 
 const getUser: RequestHandler = async (req: Request, res: Response) => {

@@ -86,6 +86,10 @@ const UserPage = () => {
 	const handlePopulateFeed = React.useCallback(async () => {
 		const postIDs = userData?.posts || [];
 
+		if (postIDs.length === 0) {
+			setPosts([]); // No posts to display
+			return;
+		}
 
 		// TODO: implement large post array fetching using block of 10 or reasonable number
 

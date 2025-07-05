@@ -107,14 +107,14 @@ const refreshAccessToken : RequestHandler = (req: Request, res: Response) => {
 
 
 const authorize = (req: Request, res: Response, next: NextFunction) => {
-	console.log(`\nAUTH: Authorizing ${req.method} request to ${req.originalUrl}`);
+	console.log(`AUTH [${Date.now()}]: ${req.method} -> ${req.originalUrl}`);
 
 	const authHeader = req.headers['authorization'];
 	const token = authHeader && authHeader.split(' ')[1];
 
 	if (!token) {
 		console.error("ERROR:\t'authController.authorize()' -> Missing Access Token");
-		res.status(401).json({ message: "Missing Access Token!", status: "error" });
+		res.status(401).json({ message: "Access Token Missing! 🔴", status: "error" });
 		return;
 	}
 
@@ -122,11 +122,11 @@ const authorize = (req: Request, res: Response, next: NextFunction) => {
 		if (err) {
 			if (err.name === "TokenExpiredError") {
 				console.error("WARN:\t'authController.authorize()' -> Access Token expired");
-				res.status(403).json({ message: "Access Token expired", status: "error" });
+				res.status(403).json({ message: "Access Token Expired", status: "error" });
 			}
 			else {
 				console.error("WARN:\t'authController.authorize()' -> Invalid Access Token");
-				res.status(403).json({ message: "Invalid Access Token", status: "error" });
+				res.status(403).json({ message: "Invalid Access Token 🔴", status: "error" });
 			}
 			return;
 		}
