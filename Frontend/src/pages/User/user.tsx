@@ -54,7 +54,7 @@ const UserPage = () => {
 
 	// --- Handler functions ---
 	// Function to fetch user data from API
-	const fetchUserData = async (whichUser : string) => {
+	const fetchUserData = async (whichUser: string) => {
 
 		// console.log(whichUser);
 		const response = await fetch(`${BACKEND_URI}/user/${whichUser}`, {
@@ -125,7 +125,7 @@ const UserPage = () => {
 	}, [userData]);
 
 	// Function to handle follow action
-	const handleFollowUser = async (followee : string) => {
+	const handleFollowUser = async (followee: string) => {
 
 		const response = await fetch(`${BACKEND_URI}/follow`, {
 			method: 'POST',
@@ -153,7 +153,7 @@ const UserPage = () => {
 	}
 
 	// Function to handle unfollow action
-	const handleUnfollowUser = async (unfollowee : string) => {
+	const handleUnfollowUser = async (unfollowee: string) => {
 
 		const response = await fetch(`${BACKEND_URI}/unfollow`, {
 			method: 'POST',
@@ -244,12 +244,13 @@ const UserPage = () => {
 	}, [handlePopulateFeed, userData, userID, username]);
 
 
+	// Redirect to auth page if access token is expired
 	if (!userData) {
 		return (
-		<div className={styles.userPage}>
-			<h1>'{userID}'</h1>
-			<h3 style={{ color: 'darkred' }}>User doesn't exist!</h3>
-		</div>)
+			<div className={styles.userPage}>
+				<h1>'{userID}'</h1>
+				<h3 style={{ color: 'darkred' }}>User doesn't exist!</h3>
+			</div>)
 	}
 
 	return (
@@ -283,15 +284,15 @@ const UserPage = () => {
 			<div className={styles.userFeed}>
 
 				{posts.map((post, index) => (
-					<Post key = {index}
-					by = {post.by}
-					username = {post.username}
-					description = {post.description}
-					media = {post.media}
-					createdAt = {post.createdAt}
-					likes = {post.likes}
-					comments = {post.comments}
-					saves = {post.saves} />
+					<Post key={index}
+						by={post.by}
+						username={post.username}
+						description={post.description}
+						media={post.media}
+						createdAt={post.createdAt}
+						likes={post.likes}
+						comments={post.comments}
+						saves={post.saves} />
 				))}
 
 				{/* <Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />

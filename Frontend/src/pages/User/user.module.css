@@ -10,16 +10,33 @@
 	border: .1em solid black;
 	border-top: none;
 	border-bottom: none;
-	background-color: dimgrey;
+	/* background-color: dimgrey; */
 }
 
 .hero {
-	background: linear-gradient(to bottom right, #aaa, #181850);
+
+
+  --s: 84px; /* control the size*/
+  --c1: #f2f2f2;
+  --c2: #cdcbcc;
+  --c3: #999999;
+
+  --_g: 0 120deg,#0000 0;
+  background:
+    conic-gradient(             at calc(250%/3) calc(100%/3),var(--c3) var(--_g)),
+    conic-gradient(from -120deg at calc( 50%/3) calc(100%/3),var(--c2) var(--_g)),
+    conic-gradient(from  120deg at calc(100%/3) calc(250%/3),var(--c1) var(--_g)),
+    conic-gradient(from  120deg at calc(200%/3) calc(250%/3),var(--c1) var(--_g)),
+    conic-gradient(from -180deg at calc(100%/3) 50%,var(--c2)  60deg,var(--c1) var(--_g)),
+    conic-gradient(from   60deg at calc(200%/3) 50%,var(--c1)  60deg,var(--c3) var(--_g)),
+    conic-gradient(from  -60deg at 50% calc(100%/3),var(--c1) 120deg,var(--c2) 0 240deg,var(--c3) 0);
+  background-size: calc(var(--s)*sqrt(3)) var(--s);
 
 	width: 100%;
 	/* min-height: 30%; */
 	/* height: 30%; */
 	padding: 1em;
+
 
 	.userImage {
 		max-width: 180px;
@@ -52,3 +69,17 @@
 
 
 }
+
+.userFeed {
+	/* Same as .posts -> Home -> midPanel */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+
+	gap: 1em;
+	padding: 1em;
+
+	width: 100%;
+}
+
