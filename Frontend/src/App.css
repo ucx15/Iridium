@@ -1,6 +1,9 @@
 .App {
 	display: flex;
 
-	background-color: silver;
+	background-color: #e5e5f7;
+	background-image: linear-gradient(0deg, hsl(240, 50%, 98%) 90%, hsla(219, 92%, 62%, 0.06) 50%);
+	background-size: 25px 25px;
+
 	min-height: 100vh;
 }
