@@ -113,13 +113,21 @@ const get: RequestHandler = async (req: Request, res: Response) => {
 	if (!user) {
 		console.log(`ERROR: User '${post.by}' does not exist. Changing post by to 'deleted'`);
 		post.by = 'deleted';
+
+		res.status(400).json({
+			message: `Post '${id}' is orphaned and has been deleted`,
+			status: 'error'
+		});
+		return;
 	}
+
+	let userProj = { username: user.username, name: user.name };
 
 	res.status(200).json({
 		message: 'Post fetched successfully',
 		status: 'success',
 		post,
-		user
+		user: userProj
 	});
 }
 
@@ -136,4 +144,54 @@ const getBatch: RequestHandler = async (req: Request, res: Response) => {
 	});
 }
 
-export { create, get, getBatch };
+const deletePost: RequestHandler = async (req: Request, res: Response) => {
+	const { body } = validateRequestBody(req.body, ['uuid', 'username']);
+
+	if (!body) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// Check if body user matches token user
+	if (body.username !== req.username) {
+		console.log(`ERROR: User '${body.username}' does not match token user '${req.username}'`);
+		res.status(400).json({
+			message: `Invalid Request Body`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// Check if post exists
+	if (!await Post.find(body.uuid)) {
+		console.log(`ERROR: Post '${body.uuid}' does not exist`);
+		res.status(400).json({
+			message: `Post '${body.uuid}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// Delete post
+	console.log("DELETE: Post with ID", body.uuid, "by", body.username);
+
+	if (!await Post.deletePost(body.uuid)) {
+		console.log(`ERROR: Failed to delete post '${body.uuid}'`);
+		res.status(500).json({
+			message: `Failed to delete post '${body.uuid}'`,
+			status: 'error'
+		});
+		return;
+	};
+
+	res.status(200).json({
+		message: 'Post deleted successfully',
+		status: 'success'
+	});
+}
+
+export { create, get, getBatch, deletePost };

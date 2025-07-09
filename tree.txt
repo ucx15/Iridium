@@ -18,6 +18,7 @@ C:\Users\iuc15\Dev\Web\Project-Iridium
 |   |   +---Routes
 |   |   |   +---apiRoutes.js
 |   |   |   └---defaultRoutes.js
+|   |   +---logging.js
 |   |   +---server.js
 |   |   └---utils.js
 |   +---Src
@@ -40,6 +41,8 @@ C:\Users\iuc15\Dev\Web\Project-Iridium
 |   +---package-lock.json
 |   +---package.json
 |   └---tsconfig.json
++---Deploy
+|   └---deploy-to-backend.ps1
 +---Frontend
 |   +---dist
 |   |   +---assets
@@ -51,6 +54,7 @@ C:\Users\iuc15\Dev\Web\Project-Iridium
 |   |   └---Assets
 |   |       +---Icons
 |   |       |   +---chick.png
+|   |       |   +---dustbin.png
 |   |       |   +---heart.png
 |   |       |   +---message.png
 |   |       |   └---paper-plane.png
@@ -100,8 +104,10 @@ C:\Users\iuc15\Dev\Web\Project-Iridium
 |   |   +---index.css
 |   |   +---main.tsx
 |   |   └---vite-env.d.ts
+|   +---.env
 |   +---.gitignore
 |   +---eslint.config.js
+|   +---favicon.ico
 |   +---index.html
 |   +---package-lock.json
 |   +---package.json
@@ -109,7 +115,11 @@ C:\Users\iuc15\Dev\Web\Project-Iridium
 |   +---tsconfig.app.json
 |   +---tsconfig.json
 |   +---tsconfig.node.json
+|   +---vercel.json
 |   └---vite.config.ts
++---Tests
+|   +---load.txt
+|   └---test.js
 +---.gitignore
 +---LICENSE
 +---Project-Iridium.code-workspace

@@ -3,8 +3,18 @@ import React from 'react'
 // Styles
 import styles from './post.module.css';
 
+// Config
+import BACKEND_URI from '../../config.js';
+
+// Utils
+import * as LS from '../../utils/LocalStorage.js';
+import { refreshAccessToken } from '../../utils/JWT.js';
+
 
 interface Props {
+	_id: string;         // post id
+	uuid: string;        // post uuid
+
 	by: string;        // creator id
 	username: string;  // creator name
 
@@ -16,6 +26,8 @@ interface Props {
 	likes?: string[];
 	comments?: string[];
 	saves?: string[];
+
+	showDelete?: boolean; // if the post can be deleted by the user
 }
 
 const Post = (props: Props) => {
@@ -38,6 +50,52 @@ const Post = (props: Props) => {
 			setLikeCount(likeCount - 1);
 		} else {
 			setLikeCount(likeCount + 1);
+		}
+	};
+
+	const handleDeletePost = async () => {
+		if (props.by !== LS.getUsername()) {
+			return;
+		}
+
+		try {
+			const resp = await fetch(
+				`${BACKEND_URI}/post/delete`,
+				{
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${LS.getAccessToken()}`
+					},
+					body: JSON.stringify({
+						uuid: props.uuid,
+						username: LS.getUsername()
+					})
+				}
+			);
+
+			const data = await resp.json();
+			console.log(data)
+
+			if (resp.status === 403) {
+				if (await refreshAccessToken()) {
+					handleDeletePost();
+				}
+				return;
+			}
+
+			else if (resp.status === 400) {
+				console.error('Failed to delete post:', data.message);
+				return;
+			}
+
+			else if (resp.ok && data.status === 'success') {
+				console.log('Post deleted successfully:', props.uuid);
+			}
+		}
+
+		catch (err) {
+			console.error('Error deleting post:', props.uuid, err);
 		}
 	};
 
@@ -65,8 +123,8 @@ const Post = (props: Props) => {
 				<div className={styles.reaction}>
 
 					<button className={[styles.likeButton, styles.reactionButton].join(' ')}
-					onClick={handleLikeClick} >
-						<img src="/Assets/Icons/heart.png" alt="like button icon" className={styles.iconImage}/>
+						onClick={handleLikeClick} >
+						<img src="/Assets/Icons/heart.png" alt="like button icon" className={styles.iconImage} />
 					</button>
 
 					<div className={styles.likeCount}>{likeCount}</div>
@@ -74,18 +132,28 @@ const Post = (props: Props) => {
 
 				<div className={styles.reaction}>
 					<button className={[styles.commentButton, styles.reactionButton].join(' ')}>
-						<img src="/Assets/Icons/message.png" alt="comment button icon" className={styles.iconImage}/>
+						<img src="/Assets/Icons/message.png" alt="comment button icon" className={styles.iconImage} />
 					</button>
 					<div className={styles.likeCount}>{commentCount}</div>
 				</div>
 
 				<div className={styles.reaction}>
 					<button className={[styles.shareButton, styles.reactionButton].join(' ')}>
-					<img src="/Assets/Icons/paper-plane.png" alt="share button icon" className={styles.iconImage}/>
+						<img src="/Assets/Icons/paper-plane.png" alt="share button icon" className={styles.iconImage} />
 					</button>
 					<div className={styles.likeCount}>{isSaved}</div>
 				</div>
 
+				{/* TODO: Show confirmation dialog upon clicking this button */}
+				{props.showDelete && (props.by === LS.getUsername()) && (
+					<div className={styles.reaction}>
+						<button className={[styles.deleteButton, styles.reactionButton].join(' ')}
+							onClick={handleDeletePost}
+						>
+							<img src="/Assets/Icons/dustbin.png" alt="delete button icon" className={styles.iconImage} />
+						</button>
+					</div>
+				)}
 			</div>
 
 		</div>

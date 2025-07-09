@@ -15,6 +15,9 @@ import { refreshAccessToken } from '../../../utils/JWT';
 import BACKEND_URI from '../../../config';
 
 type PostData = {
+	_id: string;         // post id
+	uuid: string;        // post uuid
+
 	by: string;
 	username: string;  // creator name
 
@@ -108,6 +111,8 @@ const MiddlePanel = () => {
 				const user : UserData = data.user as UserData;
 
 				posts.push({
+					_id: post._id,
+					uuid: post.uuid,
 					by: post.by,
 					username: user.name,
 
@@ -151,6 +156,8 @@ const MiddlePanel = () => {
 
 				{posts.map((post, index) => (
 					<Post key = {index}
+					_id = {post._id}
+					uuid = {post.uuid}
 					by = {post.by}
 					username = {post.username}
 					description = {post.description}

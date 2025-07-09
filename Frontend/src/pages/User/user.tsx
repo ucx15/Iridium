@@ -13,6 +13,9 @@ import BACKEND_URI from '../../config';
 import styles from './user.module.css';
 
 type PostData = {
+	_id: string;         // post id
+	uuid: string;        // post uuid
+
 	by: string;
 	username: string;  // creator name
 
@@ -110,6 +113,7 @@ const UserPage = () => {
 		});
 
 		const data = await res.json();
+		// console.log(data);
 
 		if (res.status === 403) {
 			if (await refreshAccessToken()) {
@@ -285,21 +289,20 @@ const UserPage = () => {
 
 				{posts.map((post, index) => (
 					<Post key={index}
+						uuid={post.uuid}
+						_id={post._id}
 						by={post.by}
-						username={post.username}
+						username={userData.name}
 						description={post.description}
 						media={post.media}
 						createdAt={post.createdAt}
 						likes={post.likes}
 						comments={post.comments}
-						saves={post.saves} />
+						saves={post.saves}
+						showDelete={true} // Show delete button only if the post is created by the user
+						/>
 				))}
 
-				{/* <Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
-				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} />
-				<Post by={user} username={userData.name} description="Lorem ipsum dolor, sit amet consectetur adipisicing elit" media={[]} /> */}
-
-				{/* TODO: Fetch user posts from API and render them here */}
 			</div>
 		</div>
 	)
@@ -307,5 +310,4 @@ const UserPage = () => {
 
 export default UserPage
 
-// TODO: fetch user posts from API
 // TODO: fetch usable data from API
