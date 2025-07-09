@@ -91,6 +91,7 @@ const Post = (props: Props) => {
 
 			else if (resp.ok && data.status === 'success') {
 				console.log('Post deleted successfully:', props.uuid);
+				window.alert('Post deleted successfully');
 			}
 		}
 
@@ -144,7 +145,6 @@ const Post = (props: Props) => {
 					<div className={styles.likeCount}>{isSaved}</div>
 				</div>
 
-				{/* TODO: Show confirmation dialog upon clicking this button */}
 				{props.showDelete && (props.by === LS.getUsername()) && (
 					<div className={styles.reaction}>
 						<button className={[styles.deleteButton, styles.reactionButton].join(' ')}

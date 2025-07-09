@@ -144,6 +144,7 @@ const getBatch: RequestHandler = async (req: Request, res: Response) => {
 	});
 }
 
+// TODO: Make it hard delete
 const deletePost: RequestHandler = async (req: Request, res: Response) => {
 	const { body } = validateRequestBody(req.body, ['uuid', 'username']);
 
@@ -176,8 +177,9 @@ const deletePost: RequestHandler = async (req: Request, res: Response) => {
 		return;
 	}
 
+	// TODO: remove from user array of posts
+
 	// Delete post
-	console.log("DELETE: Post with ID", body.uuid, "by", body.username);
 
 	if (!await Post.deletePost(body.uuid)) {
 		console.log(`ERROR: Failed to delete post '${body.uuid}'`);
@@ -187,6 +189,8 @@ const deletePost: RequestHandler = async (req: Request, res: Response) => {
 		});
 		return;
 	};
+
+	console.log(`INFO: Post '${body.uuid}' deleted successfully`);
 
 	res.status(200).json({
 		message: 'Post deleted successfully',
