@@ -198,4 +198,133 @@ const deletePost: RequestHandler = async (req: Request, res: Response) => {
 	});
 }
 
-export { create, get, getBatch, deletePost };
+const like: RequestHandler = async (req: Request, res: Response) => {
+	const {body} = validateRequestBody(req.body, ['postID', 'username']);
+
+	if (!body) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// provided username doesn't match the token username
+	if (req.username !== body.username) {
+		console.log(`ERROR: User '${body.username}' does not match token user '${req.username}'`);
+		res.status(400).json({
+			message: `username mismatch in request body from JWT Token`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// Check if post exists
+	if (!await Post.find(body.postID)) {
+		console.log(`ERROR: Post '${body.postID}' does not exist`);
+		res.status(400).json({
+			message: `Post '${body.postID}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	else if (!await User.find(body.username)) {
+		console.log(`ERROR: User '${body.username}' does not exist`);
+		res.status(400).json({
+			message: `User '${body.username}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	if ( !await Post.like(body.postID, body.username) ) {
+		console.log(`ERROR: Failed to like post '${body.postID}' by user '${body.username}'`);
+		res.status(500).json({
+			message: `Failed to like post '${body.postID}'`,
+			status: 'error'
+		});
+		return;
+	}
+
+	if ( !await User.likePost(body.username, body.postID) ) {
+		console.log(`ERROR: Failed to like post '${body.postID}' by user '${body.username}'`);
+		res.status(500).json({
+			message: `Failed to like post '${body.postID}'`,
+			status: 'error'
+		});
+		return;
+	}
+
+	res.status(200).json({
+		message: 'Post liked successfully',
+		status: 'success'
+	});
+}
+
+const unlike: RequestHandler = async (req: Request, res: Response) => {
+	const {body} = validateRequestBody(req.body, ['postID', 'username']);
+
+	if (!body) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// provided username doesn't match the token username
+	if (req.username !== body.username) {
+		console.log(`ERROR: User '${body.username}' does not match token user '${req.username}'`);
+		res.status(400).json({
+			message: `username mismatch in request body from JWT Token`,
+			status: 'error'
+		});
+		return;
+	}
+
+	// Check if post exists
+	if (!await Post.find(body.postID)) {
+		console.log(`ERROR: Post '${body.postID}' does not exist`);
+		res.status(400).json({
+			message: `Post '${body.postID}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	else if (!await User.find(body.username)) {
+		console.log(`ERROR: User '${body.username}' does not exist`);
+		res.status(400).json({
+			message: `User '${body.username}' does not exist`,
+			status: 'error'
+		});
+		return;
+	}
+
+	if ( !await Post.unlike(body.postID, body.username) ) {
+		console.log(`ERROR: Failed to unlike post '${body.postID}' by user '${body.username}'`);
+		res.status(500).json({
+			message: `Failed to unlike post '${body.postID}'`,
+			status: 'error'
+		});
+		return;
+	}
+	if ( !await User.unlikePost(body.username, body.postID) ) {
+		console.log(`ERROR: Failed to unlike post '${body.postID}' by user '${body.username}'`);
+		res.status(500).json({
+			message: `Failed to unlike post '${body.postID}'`,
+			status: 'error'
+		});
+		return;
+	}
+
+	res.status(200).json({
+		message: 'Post unliked successfully',
+		status: 'success'
+	});
+}
+
+export { create, get, getBatch, deletePost , like, unlike };

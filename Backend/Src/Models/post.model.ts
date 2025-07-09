@@ -72,7 +72,43 @@ const deletePost = async (uuid: String) => {
 	return true;
 }
 
-export default { Post, create, find, get, getBatch, deletePost };
+const like = async (uuid: String, userUUID: String) => {
+	// Check if post exists
+	const post = await Post.findOne({ uuid });
+
+	if (!post) {
+		return false;
+	}
+
+	if (post.likes.includes(userUUID)) {
+		// User already liked the post
+		return false;
+	}
+
+	post.likes.push(userUUID);
+	await post.save();
+	return true;
+};
+
+const unlike = async (uuid: String, userUUID: String) => {
+	// Check if post exists
+	const post = await Post.findOne({ uuid });
+
+	if (!post) {
+		return false;
+	}
+
+	if (!post.likes.includes(userUUID)) {
+		// User has not liked the post
+		return false;
+	}
+
+	post.likes.splice(post.likes.indexOf(userUUID), 1);
+	await post.save();
+	return true;
+};
+
+export default { Post, create, find, get, getBatch, deletePost, like, unlike};
 
 // NOTE: deleted logic here is just a soft delete -> Archive the post
 // TODO: implement Archiving the post and deletion SEPARATELY !!!

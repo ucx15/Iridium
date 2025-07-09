@@ -148,6 +148,33 @@ const unfollowUser = async (unfollower: string, unfollowee: string) => {
 	return true;
 }
 
+const likePost = async (username: string, postId: string) => {
+	const user = await User.findOne({ username });
+	if (!user) {
+		console.log(`ERROR: User '${username}' does not exist`);
+		return false;
+	}
+	if (user.likes.includes(postId)) {
+		console.log(`WARN: User '${username}' already liked post '${postId}'`);
+		return false;
+	}
+	user.likes.push(postId);
+	await user.save();
+	return true;
+}
+
+const unlikePost = async (username: string, postId: string) => {
+	const user = await User.findOne({ username });
+	if (!user) {
+		return false;
+	}
+	if (!user.likes.includes(postId)) {
+		return false;
+	}
+	user.likes.splice(user.likes.indexOf(postId), 1);
+	await user.save();
+	return true;
+}
 
 // For debugging
 const getAll = async () => {
@@ -155,4 +182,4 @@ const getAll = async () => {
 }
 
 
-export default { User, create, find, search, get, details, getAll, addPost, findPost, getAllPosts, followUser, unfollowUser};
+export default { User, create, find, search, get, details, getAll, addPost, findPost, getAllPosts, followUser, unfollowUser, likePost, unlikePost };
