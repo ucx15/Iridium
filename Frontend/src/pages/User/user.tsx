@@ -129,59 +129,88 @@ const UserPage = () => {
 	}, [userData]);
 
 	// Function to handle follow action
-	const handleFollowUser = async (followee: string) => {
+	const followUser = async (followee: string) => {
 
-		const response = await fetch(`${BACKEND_URI}/follow`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${LS.getAccessToken()}`,
-			},
-			body: JSON.stringify({
-				follower: username,
-				followee
-			}),
-		});
+		try {
+			const response = await fetch(`${BACKEND_URI}/follow`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${LS.getAccessToken()}`,
+				},
 
-		if (!response.ok) {
-			throw new Error('Failed to follow user');
+				body: JSON.stringify({
+					follower: username,
+					followee
+				}),
+			});
+
+			if (response.status === 403) {
+				if (await refreshAccessToken()) {
+					followUser(followee);
+				}
+				return;
+			}
+
+			if (!response.ok) {
+				throw new Error(`${response.status} - Failed to follow user`);
+			}
+
+			const data = await response.json();
+
+			if (data.status === 'success') {
+				return true;
+			}
+
+			throw new Error(data.message);
 		}
 
-		const data = await response.json();
-
-		if (data.status === 'success') {
-			setIsFollowing(true);
-		} else {
-			console.error('Failed to follow user:', data.message);
+		catch (err) {
+			console.error('ERROR: user.followUser() -> ', err);
+			return false;
 		}
 	}
 
 	// Function to handle unfollow action
-	const handleUnfollowUser = async (unfollowee: string) => {
+	const unfollowUser = async (unfollowee: string) => {
 
-		const response = await fetch(`${BACKEND_URI}/unfollow`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${LS.getAccessToken()}`,
-			},
+		try {
+			const response = await fetch(`${BACKEND_URI}/unfollow`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${LS.getAccessToken()}`,
+				},
 
-			body: JSON.stringify({
-				unfollower: username,
-				unfollowee
-			}),
-		});
+				body: JSON.stringify({
+					unfollower: username,
+					unfollowee
+				}),
+			});
 
-		if (!response.ok) {
-			throw new Error('Failed to unfollow user');
+			if (response.status === 403) {
+				if (await refreshAccessToken()) {
+					unfollowUser(unfollowee);
+				}
+				return;
+			}
+
+			if (!response.ok) {
+				throw new Error(`${response.status} - Failed to unfollow user`);
+			}
+
+			const data = await response.json();
+
+			if (data.status === 'success') {
+				return true;
+			}
+
+			throw new Error(data.message);
 		}
 
-		const data = await response.json();
-
-		if (data.status === 'success') {
-			setIsFollowing(false);
-		} else {
-			console.error('Failed to unfollow user:', data.message);
+		catch (err) {
+			console.error('ERROR: user.unfollowUser() -> ', err);
+			return false;
 		}
 	}
 
@@ -192,13 +221,17 @@ const UserPage = () => {
 		}
 
 		if (isFollowing) {
-			await handleUnfollowUser(userID);
-			setFollowerCount(followerCount - 1);
-			setIsFollowing(false);
+			if (await unfollowUser(userID)) {
+				setFollowerCount(followerCount - 1);
+				setIsFollowing(false);
+			}
+			else {
+				window.alert('Failed to unfollow user. Please try again later.');
+			}
 		}
 
 		else {
-			await handleFollowUser(userID);
+			await followUser(userID);
 			setFollowerCount(followerCount + 1);
 			setIsFollowing(true);
 		}
@@ -300,7 +333,7 @@ const UserPage = () => {
 						comments={post.comments}
 						saves={post.saves}
 						showDelete={true} // Show delete button only if the post is created by the user
-						/>
+					/>
 				))}
 
 			</div>

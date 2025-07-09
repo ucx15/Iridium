@@ -6,7 +6,7 @@
 	width: 80%;
 	min-width: 60%;
 
-	background-color: lightgrey;
+	background-color: hsl(240, 35%, 95%);
 	border: .2em solid slategray;
 	box-shadow: 0 0 1em 0.2em rgba(0, 0, 0, 0.2);
 	border-radius: 8px;
