@@ -37,20 +37,107 @@ const Post = (props: Props) => {
 	const [likeCount, setLikeCount] = React.useState(0);
 	const [commentCount, setCommentCount] = React.useState(0);
 
-	// Boilerplate for likes and comments
+	// for updating states
 	React.useEffect(() => {
-		setIsSaved(false);
-		setCommentCount(0);
-	}, []);
 
+		// Updating Like Count
+		setIsLiked(false);
+		if (props.likes && props.likes.length) {
+			setLikeCount(props.likes.length);
 
-	const handleLikeClick = () => {
-		setIsLiked(!isLiked);
-		if (isLiked) {
-			setLikeCount(likeCount - 1);
-		} else {
-			setLikeCount(likeCount + 1);
+			for (const u of props.likes) {
+				if (LS.getUsername() === u) {
+					setIsLiked(true);
+				}
+			}
 		}
+
+		// Updating Saved
+		setIsSaved(false);
+		if (props.saves && props.saves.length) {
+
+			for (const u of props.saves) {
+				if (LS.getUsername() === u) {
+					setIsSaved(true);
+				}
+			}
+		}
+
+		// Comments
+		setCommentCount(0);
+	}, [props]);
+
+	// like/unlike post request
+	const toggleLikePost = async (uuid : string, likeit: boolean) => {
+
+		try {
+			const res = await fetch(`${BACKEND_URI}/post/${likeit ? 'like' : 'unlike'}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${LS.getAccessToken()}`
+				},
+				body: JSON.stringify({
+					postID: uuid,
+					username: LS.getUsername()
+				})
+			})
+
+			const data = await res.json();
+
+			console.log('Response:', data);
+			console.log(`Post.toggleLikePost() -> '${data.status}' : ${data.message}`);
+
+			// Handle token expiration
+			if (res.status === 403) {
+				if (await refreshAccessToken()) {
+					toggleLikePost(uuid, likeit);
+				}
+				return;
+			}
+
+			else if (res.ok && data.status === 'success') {
+				console.log('Toggled Like successfully:', data.message);
+				return true;
+			}
+
+			else {
+				console.log("ERROR: Post.toggleLikePost() -> ", res.status, data.message)
+				return false;
+			}
+		}
+
+		catch (err) {
+			console.log("Post.toggleLikePost() -> ", err)
+			return false;
+		}
+	}
+
+	// Button Handlers
+	const handleLikeClick = async () => {
+		const toggled = await toggleLikePost(props.uuid, !isLiked);
+
+		// unlike
+		if ( isLiked ) {
+			if (toggled) {
+				setLikeCount(likeCount - 1);
+			}
+			else {
+				window.alert("ERORR: Cant unlike the post ☹️")
+			}
+		}
+
+		// like
+		else {
+			if (toggled) {
+				setLikeCount(likeCount + 1);
+			}
+			else {
+				window.alert("ERORR: Cant like the post ☹️")
+			}
+		}
+
+		setIsLiked( !isLiked );
 	};
 
 	const handleDeletePost = async () => {
@@ -99,6 +186,7 @@ const Post = (props: Props) => {
 			console.error('Error deleting post:', props.uuid, err);
 		}
 	};
+
 
 	return (
 		<div className={styles.post}>
