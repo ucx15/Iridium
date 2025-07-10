@@ -211,8 +211,7 @@ const Post = (props: Props) => {
 			<div className={styles.reactions}>
 				<div className={styles.reaction}>
 
-					<button className={[styles.likeButton, styles.reactionButton].join(' ')}
-						onClick={handleLikeClick} >
+					<button className={isLiked ? [styles.likeButton, styles.reactionButton, styles.likedButton].join(' ') : [styles.likeButton, styles.reactionButton].join(' ')} onClick={handleLikeClick}>
 						<img src="/Assets/Icons/heart.png" alt="like button icon" className={styles.iconImage} />
 					</button>
 

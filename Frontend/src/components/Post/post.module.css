@@ -94,11 +94,15 @@
 		}
 
 		/*
-		.likeButton {}
+
 
 		.commentButton {}
 
 		.shareButton {}
 		*/
 	}
+}
+
+.likedButton {
+	filter : drop-shadow(0 0 5px  crimson);
 }
