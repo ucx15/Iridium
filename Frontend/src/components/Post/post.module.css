@@ -85,6 +85,7 @@
 			/* width: 1em; */
 			/* height: 1em; */
 			background: none;
+			transition: filter 0.15s ease-in-out;
 		}
 
 		.iconImage {
