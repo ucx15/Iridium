@@ -111,6 +111,7 @@ const login : RequestHandler = async (req: Request, res: Response) => {
 	});
 };
 
+
 // const myPosts : RequestHandler = async (req: Request, res: Response) => {
 // 	res.json({'My Posts' : 'My Posts'});
 // }
@@ -128,6 +129,15 @@ const myFeed : RequestHandler = async (req: Request, res: Response) => {
 
 	const {username} = body;
 	const user = await User.get(username);
+
+	if ( username !== req.username ) {
+		console.log(`ERROR: Unauthorized access to feed of '${username}'`);
+		res.status(400).json({
+			message: `Unauthorized access to feed of '${username}'`,
+			status: 'error'
+		});
+		return;
+	}
 
 	if ( !user ) {
 		console.log(`ERROR: User '${username}' does not exist`);
@@ -215,6 +225,15 @@ const followUser : RequestHandler = async (req: Request, res: Response) => {
 		return;
 	}
 
+	if ( body.follower !== req.username ) {
+		console.log(`ERROR: Unauthorized access to follow user '${body.followee}'`);
+		res.status(401).json({
+			message: `Unauthorized access to follow user '${body.followee}'`,
+			status: 'error'
+		});
+		return;
+	}
+
 	const { follower, followee } = body;
 	console.log(`POST: Follow User '${follower}' -> '${followee}'`);
 
@@ -278,6 +297,15 @@ const unfollowUser : RequestHandler = async (req: Request, res: Response) => {
 		console.log(`ERROR: Missing required fields`);
 		res.status(400).json({
 			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	if ( body.unfollower !== req.username ) {
+		console.log(`ERROR: Unauthorized access to unfollow user '${body.unfollowee}'`);
+		res.status(401).json({
+			message: `Unauthorized access to unfollow user '${body.unfollowee}'`,
 			status: 'error'
 		});
 		return;

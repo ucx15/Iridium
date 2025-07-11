@@ -108,7 +108,8 @@ const UserPage = () => {
 				'Authorization': `Bearer ${LS.getAccessToken()}`
 			},
 			body: JSON.stringify({
-				postIDs
+				postIDs,
+				username : LS.getUsername()
 			})
 		});
 

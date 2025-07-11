@@ -1,4 +1,7 @@
+
 function validateRequestBody(
+    // TODO: Fix - Doesn't handle string[] right now
+
     body: Record<string, any>,
     fields: string[],
     optional?: string[])

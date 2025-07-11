@@ -15,6 +15,10 @@ import * as searchController from '../Controllers/search.controller.js';
 
 const router = Router();
 
+
+// TODO: Change token related HTTP codes to 401 Unauthorized in frontend and backend
+
+
 // auth routes
 router.post('/signup', userController.signup);
 router.post('/login', userController.login);

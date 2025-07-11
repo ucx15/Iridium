@@ -35,6 +35,15 @@ const create: RequestHandler = async (req: Request, res: Response) => {
 		return;
 	}
 
+	if ( body.username !== req.username ) {
+		console.log(`ERROR: Unauthorized access to feed of '${body.username}'`);
+		res.status(401).json({
+			message: `Unauthorized access to feed of '${body.username}'`,
+			status: 'error'
+		});
+		return;
+	}
+
 	let media: string[] | undefined;
 
 	if (optional) {
@@ -86,17 +95,6 @@ const create: RequestHandler = async (req: Request, res: Response) => {
 const get: RequestHandler = async (req: Request, res: Response) => {
 	const { id } = req.params;
 
-	// const { body } = validateRequestBody(req.body, ['postID']);
-
-	// if (!body) {
-	// 	console.log(`ERROR: Missing required fields`);
-	// 	res.status(400).json({
-	// 		message: `Missing required fields`,
-	// 		status: 'error'
-	// 	});
-	// 	return;
-	// }
-
 	const post = await Post.get(id);
 
 	if (!post) {
@@ -131,9 +129,28 @@ const get: RequestHandler = async (req: Request, res: Response) => {
 	});
 }
 
+
 const getBatch: RequestHandler = async (req: Request, res: Response) => {
-	const { postIDs } = req.body;
-	// console.log(postIDs)
+	// const {body} = validateRequestBody(req.body, ['postIDs', 'username']);
+	const { postIDs, username } = req.body;
+
+	if (!req.body || req.body.postIDs === undefined || req.body.username === undefined) {
+		console.log(`ERROR: Missing required fields`);
+		res.status(400).json({
+			message: `Missing required fields`,
+			status: 'error'
+		});
+		return;
+	}
+
+	if (username !== req.username) {
+		console.log(`ERROR: Unauthorized access to feed of '${username}'`);
+		res.status(400).json({
+			message: `Unauthorized access to feed of '${username}'`,
+			status: 'error'
+		});
+		return;
+	}
 
 	const posts = await Post.getBatch(postIDs);
 
@@ -158,10 +175,10 @@ const deletePost: RequestHandler = async (req: Request, res: Response) => {
 	}
 
 	// Check if body user matches token user
-	if (body.username !== req.username) {
-		console.log(`ERROR: User '${body.username}' does not match token user '${req.username}'`);
-		res.status(400).json({
-			message: `Invalid Request Body`,
+	if ( body.username !== req.username ) {
+		console.log(`ERROR: Unauthorized access to delete post'`);
+		res.status(401).json({
+			message: `Unauthorized access to delete post'`,
 			status: 'error'
 		});
 		return;
@@ -211,10 +228,10 @@ const like: RequestHandler = async (req: Request, res: Response) => {
 	}
 
 	// provided username doesn't match the token username
-	if (req.username !== body.username) {
-		console.log(`ERROR: User '${body.username}' does not match token user '${req.username}'`);
+	if ( body.username !== req.username ) {
+		console.log(`ERROR: Unauthorized access to like a post`);
 		res.status(400).json({
-			message: `username mismatch in request body from JWT Token`,
+			message: `Unauthorized access to like a post`,
 			status: 'error'
 		});
 		return;
@@ -276,10 +293,10 @@ const unlike: RequestHandler = async (req: Request, res: Response) => {
 	}
 
 	// provided username doesn't match the token username
-	if (req.username !== body.username) {
-		console.log(`ERROR: User '${body.username}' does not match token user '${req.username}'`);
+	if ( body.username !== req.username ) {
+		console.log(`ERROR: Unauthorized access to unlike a post`);
 		res.status(400).json({
-			message: `username mismatch in request body from JWT Token`,
+			message: `Unauthorized access to unlike a post`,
 			status: 'error'
 		});
 		return;
